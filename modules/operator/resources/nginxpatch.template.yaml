@@ -1,0 +1,27 @@
+spec:
+  externalIPs:
+  - ${loadbalancer_ip_address}
+  externalTrafficPolicy: Local
+  ports:
+  - name: http
+    nodePort: 30080
+    port: 30080
+    protocol: TCP
+    targetPort: 80
+  - name: https
+    nodePort: 30443
+    port: 30443
+    protocol: TCP
+    targetPort: 443
+  - name: healthz
+    nodePort: 30254
+    port: 30254
+    protocol: TCP
+    targetPort: 10254
+  selector:
+    app: nginx-ingress
+    component: nginx
+    release: nginx
+  sessionAffinity: None
+  type: NodePort
+

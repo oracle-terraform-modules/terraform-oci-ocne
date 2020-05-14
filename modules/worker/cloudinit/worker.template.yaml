@@ -1,0 +1,19 @@
+# Copyright 2020, Oracle Corporation and/or affiliates.  
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
+
+#cloud-config
+package_upgrade: ${worker_upgrade}
+packages:
+  - python3
+  - chrony
+timezone: ${timezone}
+write_files:
+  # setup script
+  - path: "/root/worker/worker.sh"
+    permissions: "0700"
+    encoding: "gzip+base64"
+    content: |
+      ${worker_sh_content}
+runcmd:
+  - bash /root/worker/worker.sh
+  - touch /home/opc/worker.finish

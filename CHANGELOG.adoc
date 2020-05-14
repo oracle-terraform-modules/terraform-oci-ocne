@@ -1,0 +1,12 @@
+= CHANGELOG
+:idprefix:
+:idseparator: *
+
+:uri-changelog: http://keepachangelog.com/
+All notable changes to this project are documented in this file.
+
+The format is based on {uri-changelog}[Keep a Changelog].
+
+== v0.1.0 (May 14, 2020)
+
+* First public release
