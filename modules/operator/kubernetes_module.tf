@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 data "template_file" "create_module" {
-  template = file("${path.module}/scripts/create_module.template.sh")
+  template = file("${path.module}/scripts/create_kubernetes_module.template.sh")
 
   vars = {
     environment            = var.olcne_environment.environment_name
@@ -36,15 +36,14 @@ resource null_resource "create_module" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/create_module",
-      "$HOME/create_module",
-      # "rm -f $HOME/create_module"
+      "chmod +x $HOME/create_kubernetes_module",
+      "$HOME/create_kubernetes_module",
     ]
   }
 }
 
-data "template_file" "install_module" {
-  template = file("${path.module}/scripts/install_module.template.sh")
+data "template_file" "install_kubernetes_module" {
+  template = file("${path.module}/scripts/install_kubernetes_module.template.sh")
 
   vars = {
     environment  = var.olcne_environment.environment_name
@@ -68,15 +67,14 @@ resource null_resource "install_module" {
   depends_on = [null_resource.create_module]
 
   provisioner "file" {
-    content     = data.template_file.install_module.rendered
-    destination = "~/install_module"
+    content     = data.template_file.install_kubernetes_module.rendered
+    destination = "~/install_kubernetes_module"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/install_module",
-      "$HOME/install_module",
-      # "rm -f $HOME/install_module"
+      "chmod +x $HOME/install_kubernetes_module",
+      "$HOME/install_kubernetes_module",
     ]
   }
 }
