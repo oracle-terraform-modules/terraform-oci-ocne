@@ -5,7 +5,7 @@
 
 echo 'Creating environment ${environment}'
 
-olcnectl --api-server 127.0.0.1:8091 environment create --environment-name ${environment} \
+olcnectl --api-server 127.0.0.1:8091 environment create --environment-name "${environment}" \
     --update-config \
     --secret-manager-type file \
     --olcne-node-cert-path /etc/olcne/configs/certificates/production/node.cert \

@@ -8,7 +8,7 @@ echo 'Getting kubeconfig'
 mkdir .kube
 
 olcnectl --api-server 127.0.0.1:8091 module property get \
-  --environment-name ${environment} --name ${cluster_name} \
+  --environment-name "${environment}" --name "${cluster_name}" \
   --property kubecfg | base64 -d > .kube/config
 
 echo "source <(kubectl completion bash)" >> ~/.bashrc

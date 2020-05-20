@@ -14,11 +14,11 @@ sudo ./gen-certs-helper.sh \
   --cert-request-state "${state}" \
   --cert-request-country "${country}" \
   --cert-request-common-name "${common_name}" \
-  --nodes ${operator_node},${master_nodes},${worker_nodes} 2> /dev/null
+  --nodes "${operator_node}","${master_nodes}","${worker_nodes}" 2> /dev/null
 
 echo 'Getting nodes public keys'
 
-ssh-keyscan -H ${operator_node} ${scan_master_nodes} ${scan_worker_nodes} >> ~/.ssh/known_hosts 2> /dev/null
+ssh-keyscan -H "${operator_node}" "${scan_master_nodes}" "${scan_worker_nodes}" >> ~/.ssh/known_hosts 2> /dev/null
 
 echo 'Copying certificates to all nodes'
 
