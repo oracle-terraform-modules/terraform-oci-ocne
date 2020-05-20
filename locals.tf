@@ -110,7 +110,7 @@ locals {
     nsg_ids      = module.network.nsg_ids
     subnet_id    = lookup(module.network.subnet_ids, "masters")
     subnet_label = module.network.master_subnet_dns_label
-    subnet_mask  = cidrnetmask(cidrsubnet(var.vcn_cidr, var.newbits["master"], var.netnum["master"]))
+    subnet_mask  = cidrnetmask(cidrsubnet(var.vcn_cidr, var.newbits["masters"], var.netnum["masters"]))
   }
 
   # operator module parameters
