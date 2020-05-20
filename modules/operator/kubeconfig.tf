@@ -20,7 +20,7 @@ resource null_resource "get_kubeconfig" {
     bastion_private_key = file(var.olcne_bastion.ssh_private_key_path)
   }
 
-  depends_on = [null_resource.install_module]
+  depends_on = [null_resource.install_kubernetes_module]
 
   provisioner "file" {
     content     = data.template_file.get_kubeconfig.rendered
