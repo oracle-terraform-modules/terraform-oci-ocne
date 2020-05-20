@@ -19,6 +19,7 @@ systemctl enable --now chronyd
 
 # disable swap
 swapoff -a
+sed -i '/swap/d' /etc/fstab
 
 # br_netfilter
 modprobe br_netfilter
