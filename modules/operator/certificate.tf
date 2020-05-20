@@ -142,7 +142,7 @@ resource null_resource "create_certificate" {
 
   provisioner "file" {
     content     = data.template_file.create_certificate.rendered
-    destination = "~/create_certificate"
+    destination = "~/create_certificate.sh"
   }
 
   provisioner "remote-exec" {
