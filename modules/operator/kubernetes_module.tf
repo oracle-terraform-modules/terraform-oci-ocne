@@ -31,13 +31,13 @@ resource null_resource "create_module" {
 
   provisioner "file" {
     content     = data.template_file.create_module.rendered
-    destination = "~/create_module"
+    destination = "~/create_kubernetes_module.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/create_kubernetes_module",
-      "$HOME/create_kubernetes_module",
+      "chmod +x $HOME/create_kubernetes_module.sh",
+      "$HOME/create_kubernetes_module.sh",
     ]
   }
 }
@@ -68,13 +68,13 @@ resource null_resource "install_module" {
 
   provisioner "file" {
     content     = data.template_file.install_kubernetes_module.rendered
-    destination = "~/install_kubernetes_module"
+    destination = "~/install_kubernetes_module.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/install_kubernetes_module",
-      "$HOME/install_kubernetes_module",
+      "chmod +x $HOME/install_kubernetes_module.sh",
+      "$HOME/install_kubernetes_module.sh",
     ]
   }
 }

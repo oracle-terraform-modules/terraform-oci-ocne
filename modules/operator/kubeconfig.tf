@@ -24,14 +24,14 @@ resource null_resource "get_kubeconfig" {
 
   provisioner "file" {
     content     = data.template_file.get_kubeconfig.rendered
-    destination = "~/get_kubeconfig"
+    destination = "~/get_kubeconfig.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/get_kubeconfig",
-      "$HOME/get_kubeconfig",
-      # "rm -f $HOME/get_kubeconfig"
+      "chmod +x $HOME/get_kubeconfig.sh",
+      "$HOME/get_kubeconfig.sh",
+      # "rm -f $HOME/get_kubeconfig.sh"
     ]
   }
 }

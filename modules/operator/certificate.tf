@@ -112,14 +112,14 @@ resource null_resource "download_private_key" {
 
   provisioner "file" {
     content     = data.template_file.download_private_key.rendered
-    destination = "~/get_key"
+    destination = "~/get_key.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
       "sleep 10",
-      "chmod +x $HOME/get_key",
-      "$HOME/get_key",
+      "chmod +x $HOME/get_key.sh",
+      "$HOME/get_key.sh",
       "chmod go-rw ~/.ssh/id_rsa",
     ]
   }
@@ -147,9 +147,9 @@ resource null_resource "create_certificate" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/create_certificate",
-      "$HOME/create_certificate",
-      # "rm -f $HOME/create_certificate"
+      "chmod +x $HOME/create_certificate.sh",
+      "$HOME/create_certificate.sh",
+      # "rm -f $HOME/create_certificate.sh"
     ]
   }
 }

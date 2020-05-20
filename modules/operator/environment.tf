@@ -22,14 +22,14 @@ resource null_resource "configure_api" {
 
   provisioner "file" {
     content     = data.template_file.configure_api.rendered
-    destination = "~/configure_api"
+    destination = "~/configure_api.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/configure_api",
-      "$HOME/configure_api",
-      # "rm -f $HOME/configure_api"
+      "chmod +x $HOME/configure_api.sh",
+      "$HOME/configure_api.sh",
+      # "rm -f $HOME/configure_api.sh"
     ]
   }
 }
@@ -55,14 +55,14 @@ resource null_resource "configure_agent" {
 
   provisioner "file" {
     content     = data.template_file.configure_agent.rendered
-    destination = "~/configure_agent"
+    destination = "~/configure_agent.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/configure_agent",
-      "$HOME/configure_agent",
-      # "rm -f $HOME/configure_agent"
+      "chmod +x $HOME/configure_agent.sh",
+      "$HOME/configure_agent.sh",
+      # "rm -f $HOME/configure_agent.sh"
     ]
   }
   count = (var.olcne_masters.master_nodes_size + var.olcne_workers.worker_nodes_size)
@@ -93,14 +93,14 @@ resource null_resource "create_environment" {
 
   provisioner "file" {
     content     = data.template_file.create_environment.rendered
-    destination = "~/create_environment"
+    destination = "~/create_environment.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/create_environment",
-      "$HOME/create_environment",
-      # "rm -f $HOME/create_environment"
+      "chmod +x $HOME/create_environment.sh",
+      "$HOME/create_environment.sh",
+      # "rm -f $HOME/create_environment.sh"
     ]
   }
 }

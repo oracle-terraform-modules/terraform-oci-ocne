@@ -26,14 +26,14 @@ resource null_resource "install_helm" {
 
   provisioner "file" {
     content     = data.template_file.install_helm.rendered
-    destination = "~/install_helm"
+    destination = "~/install_helm.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/install_helm",
-      "$HOME/install_helm",
-      # "rm -f $HOME/install_helm"
+      "chmod +x $HOME/install_helm.sh",
+      "$HOME/install_helm.sh",
+      # "rm -f $HOME/install_helm.sh"
     ]
   }
 }
