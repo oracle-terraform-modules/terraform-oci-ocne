@@ -35,11 +35,6 @@ do
   firewall-offline-cmd --zone=$z --add-port=10250/tcp
   firewall-offline-cmd --zone=$z --add-port=10255/tcp
   firewall-offline-cmd --zone=$z --add-port=8472/udp
-
-# node ports
-  firewall-offline-cmd --zone=$z  --add-port=30000-32767/tcp
-  firewall-offline-cmd --zone=$z  --add-port=30000-32767/udp
-
 done
 
 firewall-offline-cmd --set-default-zone=public
