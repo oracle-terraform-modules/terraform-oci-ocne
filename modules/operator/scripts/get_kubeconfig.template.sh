@@ -3,7 +3,7 @@
 # Copyright 2020, Oracle Corporation and/or affiliates.  
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-echo 'getting kubeconfig'
+echo 'Getting kubeconfig'
 
 mkdir .kube
 

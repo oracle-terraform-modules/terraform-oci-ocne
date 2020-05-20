@@ -36,7 +36,7 @@ resource null_resource "wait_for_operator" {
 
   provisioner "remote-exec" {
     inline = [
-      "while [ ! -f /home/opc/operator.finish ]; do echo 'waiting for operator to be ready';sleep 10; done",
+      "while [ ! -f /home/opc/operator.finish ]; do echo 'Waiting for operator node to be ready';sleep 10; done",
     ]
   }
 }
@@ -58,7 +58,7 @@ resource null_resource "wait_for_master" {
 
   provisioner "remote-exec" {
     inline = [
-      "while [ ! -f /home/opc/master.finish ]; do echo 'waiting for master to be ready';sleep 10; done",
+      "while [ ! -f /home/opc/master.finish ]; do echo 'Waiting for master node to be ready';sleep 10; done",
     ]
   }
   count = var.olcne_masters.master_nodes_size
@@ -81,7 +81,7 @@ resource null_resource "wait_for_worker" {
 
   provisioner "remote-exec" {
     inline = [
-      "while [ ! -f /home/opc/worker.finish ]; do echo 'waiting for worker to be ready';sleep 10; done",
+      "while [ ! -f /home/opc/worker.finish ]; do echo 'Waiting for worker node to be ready';sleep 10; done",
     ]
   }
   count = var.olcne_workers.worker_nodes_size
