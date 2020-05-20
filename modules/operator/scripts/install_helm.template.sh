@@ -4,16 +4,7 @@
 
 echo 'installing helm'
 
-wget https://get.helm.sh/helm-v${helm_version}-linux-amd64.tar.gz 2> /dev/null
-
-
-tar zxvf helm-v${helm_version}-linux-amd64.tar.gz 2> /dev/null
-
-sudo mv linux-amd64/helm /usr/local/bin 2> /dev/null
-
-rm -f helm-v${helm_version}-linux-amd64.tar.gz 2> /dev/null
-
-rm -rf linux-amd64 2> /dev/null
+sudo yum install -y helm-${helm_version} 2> /dev/null
 
 helm repo add stable https://kubernetes-charts.storage.googleapis.com 2> /dev/null
 
