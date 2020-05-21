@@ -2,7 +2,7 @@
 # Copyright 2020, Oracle Corporation and/or affiliates.  
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-echo 'Installing helm'
+echo 'Installing Helm'
 
 wget https://get.helm.sh/helm-v"${helm_version}"-linux-amd64.tar.gz 2> /dev/null
 
