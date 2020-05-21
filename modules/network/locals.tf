@@ -5,7 +5,7 @@ locals {
   # subnet cidrs - used by subnets
   bastion_subnet  = cidrsubnet(var.olcne_network_vcn.vcn_cidr, var.olcne_network_vcn.newbits["bastion"], var.olcne_network_vcn.netnum["bastion"])
   int_lb_subnet   = cidrsubnet(var.olcne_network_vcn.vcn_cidr, var.olcne_network_vcn.newbits["lb"], var.olcne_network_vcn.netnum["int_lb"])
-  master_subnet   = cidrsubnet(var.olcne_network_vcn.vcn_cidr, var.olcne_network_vcn.newbits["master"], var.olcne_network_vcn.netnum["master"])
+  master_subnet   = cidrsubnet(var.olcne_network_vcn.vcn_cidr, var.olcne_network_vcn.newbits["masters"], var.olcne_network_vcn.netnum["masters"])
   operator_subnet = cidrsubnet(var.olcne_network_vcn.vcn_cidr, var.olcne_network_vcn.newbits["operator"], var.olcne_network_vcn.netnum["operator"])
   pub_lb_subnet   = cidrsubnet(var.olcne_network_vcn.vcn_cidr, var.olcne_network_vcn.newbits["lb"], var.olcne_network_vcn.netnum["pub_lb"])
   worker_subnet   = cidrsubnet(var.olcne_network_vcn.vcn_cidr, var.olcne_network_vcn.newbits["workers"], var.olcne_network_vcn.netnum["workers"])
