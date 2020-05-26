@@ -41,5 +41,5 @@ resource "oci_load_balancer_listener" "https_listener" {
   name                     = "https"
   default_backend_set_name = oci_load_balancer_backend_set.ingress_controller[1].name
   port                     = 443
-  protocol                 = "HTTP"
+  protocol                 = "TCP"
 }
