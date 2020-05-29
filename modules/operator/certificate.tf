@@ -36,7 +36,7 @@ resource null_resource "wait_for_operator" {
 
   provisioner "remote-exec" {
     inline = [
-      "while [ ! -f /home/opc/operator.finish ]; do echo 'waiting for operator to be ready';sleep 10; done",
+      "while [ ! -f /home/opc/operator.finish ]; do echo 'Waiting for operator node to be ready';sleep 10; done",
     ]
   }
 }
@@ -58,7 +58,7 @@ resource null_resource "wait_for_master" {
 
   provisioner "remote-exec" {
     inline = [
-      "while [ ! -f /home/opc/master.finish ]; do echo 'waiting for master to be ready';sleep 10; done",
+      "while [ ! -f /home/opc/master.finish ]; do echo 'Waiting for master node to be ready';sleep 10; done",
     ]
   }
   count = var.olcne_masters.master_nodes_size
@@ -81,7 +81,7 @@ resource null_resource "wait_for_worker" {
 
   provisioner "remote-exec" {
     inline = [
-      "while [ ! -f /home/opc/worker.finish ]; do echo 'waiting for worker to be ready';sleep 10; done",
+      "while [ ! -f /home/opc/worker.finish ]; do echo 'Waiting for worker node to be ready';sleep 10; done",
     ]
   }
   count = var.olcne_workers.worker_nodes_size
@@ -112,14 +112,14 @@ resource null_resource "download_private_key" {
 
   provisioner "file" {
     content     = data.template_file.download_private_key.rendered
-    destination = "~/get_key"
+    destination = "~/get_key.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
       "sleep 10",
-      "chmod +x $HOME/get_key",
-      "$HOME/get_key",
+      "chmod +x $HOME/get_key.sh",
+      "$HOME/get_key.sh",
       "chmod go-rw ~/.ssh/id_rsa",
     ]
   }
@@ -142,14 +142,14 @@ resource null_resource "create_certificate" {
 
   provisioner "file" {
     content     = data.template_file.create_certificate.rendered
-    destination = "~/create_certificate"
+    destination = "~/create_certificate.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/create_certificate",
-      "$HOME/create_certificate",
-      # "rm -f $HOME/create_certificate"
+      "chmod +x $HOME/create_certificate.sh",
+      "$HOME/create_certificate.sh",
+      # "rm -f $HOME/create_certificate.sh"
     ]
   }
 }

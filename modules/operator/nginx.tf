@@ -34,7 +34,7 @@ resource null_resource "install_nginxcontroller" {
 
   provisioner "file" {
     content     = data.template_file.install_nginxcontroller.rendered
-    destination = "~/install_nginx"
+    destination = "~/install_nginx.sh"
   }
 
   provisioner "file" {
@@ -44,9 +44,9 @@ resource null_resource "install_nginxcontroller" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/install_nginx",
-      "$HOME/install_nginx",
-      # "rm -f $HOME/install_nginx"
+      "chmod +x $HOME/install_nginx.sh",
+      "$HOME/install_nginx.sh",
+      # "rm -f $HOME/install_nginx.sh"
     ]
   }
 }

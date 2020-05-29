@@ -5,7 +5,7 @@
 
 cd /etc/olcne
 
-echo 'generating certificates'
+echo 'Generating certificates'
 
 sudo ./gen-certs-helper.sh \
   --cert-request-organization-unit "${org_unit}" \
@@ -14,14 +14,14 @@ sudo ./gen-certs-helper.sh \
   --cert-request-state "${state}" \
   --cert-request-country "${country}" \
   --cert-request-common-name "${common_name}" \
-  --nodes ${operator_node},${master_nodes},${worker_nodes} 2> /dev/null
+  --nodes "${operator_node},${master_nodes},${worker_nodes}" 2> /dev/null
 
-echo 'getting nodes public keys'
+echo 'Getting nodes public keys'
 
 ssh-keyscan -H ${operator_node} ${scan_master_nodes} ${scan_worker_nodes} >> ~/.ssh/known_hosts 2> /dev/null
 
-echo 'copying certificates to all nodes'
+echo 'Copying certificates to all nodes'
 
 bash -ex configs/certificates/olcne-tranfer-certs.sh 2> /dev/null
 
-echo 'certificates copied to all nodes'
+echo 'Certificates copied to all nodes'

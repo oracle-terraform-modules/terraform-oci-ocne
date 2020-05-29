@@ -1,8 +1,8 @@
 # Copyright 2020, Oracle Corporation and/or affiliates.  
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-data "template_file" "create_module" {
-  template = file("${path.module}/scripts/create_module.template.sh")
+data "template_file" "create_kubernetes_module" {
+  template = file("${path.module}/scripts/create_kubernetes_module.template.sh")
 
   vars = {
     environment            = var.olcne_environment.environment_name
@@ -14,7 +14,7 @@ data "template_file" "create_module" {
   }
 }
 
-resource null_resource "create_module" {
+resource null_resource "create_kubernetes_module" {
   connection {
     host        = local.operator_private_ip
     private_key = file(var.olcne_operator.ssh_private_key_path)
@@ -30,21 +30,20 @@ resource null_resource "create_module" {
   depends_on = [null_resource.create_environment]
 
   provisioner "file" {
-    content     = data.template_file.create_module.rendered
-    destination = "~/create_module"
+    content     = data.template_file.create_kubernetes_module.rendered
+    destination = "~/create_kubernetes_module.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/create_module",
-      "$HOME/create_module",
-      # "rm -f $HOME/create_module"
+      "chmod +x $HOME/create_kubernetes_module.sh",
+      "$HOME/create_kubernetes_module.sh",
     ]
   }
 }
 
-data "template_file" "install_module" {
-  template = file("${path.module}/scripts/install_module.template.sh")
+data "template_file" "install_kubernetes_module" {
+  template = file("${path.module}/scripts/install_kubernetes_module.template.sh")
 
   vars = {
     environment  = var.olcne_environment.environment_name
@@ -52,7 +51,7 @@ data "template_file" "install_module" {
   }
 }
 
-resource null_resource "install_module" {
+resource null_resource "install_kubernetes_module" {
   connection {
     host        = local.operator_private_ip
     private_key = file(var.olcne_operator.ssh_private_key_path)
@@ -65,18 +64,17 @@ resource null_resource "install_module" {
     bastion_private_key = file(var.olcne_bastion.ssh_private_key_path)
   }
 
-  depends_on = [null_resource.create_module]
+  depends_on = [null_resource.create_kubernetes_module]
 
   provisioner "file" {
-    content     = data.template_file.install_module.rendered
-    destination = "~/install_module"
+    content     = data.template_file.install_kubernetes_module.rendered
+    destination = "~/install_kubernetes_module.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/install_module",
-      "$HOME/install_module",
-      # "rm -f $HOME/install_module"
+      "chmod +x $HOME/install_kubernetes_module.sh",
+      "$HOME/install_kubernetes_module.sh",
     ]
   }
 }
