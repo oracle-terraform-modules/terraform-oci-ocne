@@ -21,5 +21,5 @@ locals {
     vnic_attachment.vnic_id
   ]
    
-  formatted_list_of_master_ids = formatlist("instance.id='%s'", data.oci_core_instance.master.*.id)
+  formatted_list_of_master_ids = "${formatlist("instance.id='%s'", data.oci_core_instance.master.*.id)}"
 }
