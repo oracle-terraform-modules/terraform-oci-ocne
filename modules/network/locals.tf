@@ -3,12 +3,12 @@
 
 locals {
   # subnet cidrs - used by subnets
-  bastion_subnet  = cidrsubnet(var.olcne_network_vcn.vcn_cidr, var.olcne_network_vcn.newbits["bastion"], var.olcne_network_vcn.netnum["bastion"])
-  int_lb_subnet   = cidrsubnet(var.olcne_network_vcn.vcn_cidr, var.olcne_network_vcn.newbits["lb"], var.olcne_network_vcn.netnum["int_lb"])
-  master_subnet   = cidrsubnet(var.olcne_network_vcn.vcn_cidr, var.olcne_network_vcn.newbits["masters"], var.olcne_network_vcn.netnum["masters"])
-  operator_subnet = cidrsubnet(var.olcne_network_vcn.vcn_cidr, var.olcne_network_vcn.newbits["operator"], var.olcne_network_vcn.netnum["operator"])
-  pub_lb_subnet   = cidrsubnet(var.olcne_network_vcn.vcn_cidr, var.olcne_network_vcn.newbits["lb"], var.olcne_network_vcn.netnum["pub_lb"])
-  worker_subnet   = cidrsubnet(var.olcne_network_vcn.vcn_cidr, var.olcne_network_vcn.newbits["workers"], var.olcne_network_vcn.netnum["workers"])
+  bastion_subnet  = cidrsubnet(data.oci_core_vcn.vcn.cidr_block, var.newbits["bastion"], var.netnum["bastion"])
+  int_lb_subnet   = cidrsubnet(data.oci_core_vcn.vcn.cidr_block, var.newbits["lb"], var.netnum["int_lb"])
+  master_subnet   = cidrsubnet(data.oci_core_vcn.vcn.cidr_block, var.newbits["masters"], var.netnum["masters"])
+  operator_subnet = cidrsubnet(data.oci_core_vcn.vcn.cidr_block, var.newbits["operator"], var.netnum["operator"])
+  pub_lb_subnet   = cidrsubnet(data.oci_core_vcn.vcn.cidr_block, var.newbits["lb"], var.netnum["pub_lb"])
+  worker_subnet   = cidrsubnet(data.oci_core_vcn.vcn.cidr_block, var.newbits["workers"], var.netnum["workers"])
 
   anywhere = "0.0.0.0/0"
 
@@ -42,7 +42,7 @@ locals {
     {
       description = "Allow access to Platform API Server",
       protocol    = local.tcp_protocol, port = 8091,
-      source      = var.olcne_network_vcn.vcn_cidr
+      source      = data.oci_core_vcn.vcn.cidr_block
     }
   ]
 

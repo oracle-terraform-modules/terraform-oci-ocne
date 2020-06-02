@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  master_image_id = var.olcne_master.master_image_id == "Oracle" ? data.oci_core_images.master_images.images.0.id : var.olcne_master.master_image_id
+  master_image_id = var.master_image_id == "Oracle" ? data.oci_core_images.master_images.images.0.id : var.master_image_id
 
   unsorted_master_nodes_id_list = [
     for instance in data.oci_core_instance_pool_instances.master.instances :
@@ -13,7 +13,7 @@ locals {
 
   master_nodes_hostname_list = [
     for instance in data.oci_core_instance.master :
-    "${instance.hostname_label}.${var.olcne_master_network.subnet_label}"
+    "${instance.hostname_label}.${var.subnet_label}"
   ]
 
   vnic_ids_list = [

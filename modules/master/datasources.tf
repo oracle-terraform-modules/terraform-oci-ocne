@@ -2,10 +2,10 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 data "oci_core_images" "master_images" {
-  compartment_id           = var.olcne_general.compartment_id
+  compartment_id           = var.compartment_id
   operating_system         = "Oracle Linux"
   operating_system_version = "7.7"
-  shape                    = var.olcne_master.master_shape
+  shape                    = var.master_shape
   sort_by                  = "TIMECREATED"
 }
 
@@ -18,8 +18,8 @@ data "template_file" "master_cloud_init_file" {
 
   vars = {
     master_sh_content = base64gzip(data.template_file.master_template.rendered)
-    master_upgrade    = var.olcne_master.master_upgrade
-    timezone          = var.olcne_master.timezone
+    master_upgrade    = var.master_upgrade
+    timezone          = var.timezone
   }
 }
 
@@ -37,7 +37,7 @@ data "template_cloudinit_config" "master" {
 
 # Gets the list of master instances
 data "oci_core_instance_pool_instances" "master" {
-  compartment_id   = var.olcne_general.compartment_id
+  compartment_id   = var.compartment_id
   depends_on       = [oci_core_instance_pool.master]
   instance_pool_id = oci_core_instance_pool.master.id
 }
@@ -46,12 +46,12 @@ data "oci_core_instance_pool_instances" "master" {
 data "oci_core_instance" "master" {
   depends_on  = [oci_core_instance_pool.master]
   instance_id = element(local.master_nodes_id_list, count.index)
-  count       = var.olcne_master.size
+  count       = var.master_size
 }
 
 # Gets a list of VNIC attachments on the primary master instance
 data "oci_core_vnic_attachments" "master_vnics_attachments" {
-  compartment_id = var.olcne_general.compartment_id
+  compartment_id = var.compartment_id
   depends_on     = [oci_core_instance_pool.master]
   instance_id    = element(local.master_nodes_id_list, 0)
 }

@@ -7,7 +7,7 @@ data "template_file" "create_kubernetes_module" {
   vars = {
     environment            = var.olcne_environment.environment_name
     cluster_name           = var.olcne_environment.cluster_name
-    container_registry     = lookup(var.container_registry_urls, var.oci_provider.region)
+    container_registry     = lookup(var.container_registry_urls, var.region)
     master_vip             = var.olcne_masters.primary_master_vip
     master_nodes_addresses = join(",", sort(local.master_nodes_addresses))
     worker_nodes_addresses = join(",", sort(local.worker_nodes_addresses))
@@ -17,14 +17,14 @@ data "template_file" "create_kubernetes_module" {
 resource null_resource "create_kubernetes_module" {
   connection {
     host        = local.operator_private_ip
-    private_key = file(var.olcne_operator.ssh_private_key_path)
+    private_key = file(var.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
 
-    bastion_host        = var.olcne_bastion.bastion_public_ip
+    bastion_host        = var.bastion_public_ip
     bastion_user        = "opc"
-    bastion_private_key = file(var.olcne_bastion.ssh_private_key_path)
+    bastion_private_key = file(var.ssh_private_key_path)
   }
 
   depends_on = [null_resource.create_environment]
@@ -54,14 +54,14 @@ data "template_file" "install_kubernetes_module" {
 resource null_resource "install_kubernetes_module" {
   connection {
     host        = local.operator_private_ip
-    private_key = file(var.olcne_operator.ssh_private_key_path)
+    private_key = file(var.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
 
-    bastion_host        = var.olcne_bastion.bastion_public_ip
+    bastion_host        = var.bastion_public_ip
     bastion_user        = "opc"
-    bastion_private_key = file(var.olcne_bastion.ssh_private_key_path)
+    bastion_private_key = file(var.ssh_private_key_path)
   }
 
   depends_on = [null_resource.create_kubernetes_module]
