@@ -12,16 +12,6 @@ variable "api_private_key_path" {
   type        = string
 }
 
-variable "compartment_id" {
-  description = "compartment id"
-  type        = string
-}
-
-variable "disable_auto_retries" {
-  default = false
-  type    = bool
-}
-
 variable "region" {
   # List of regions: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm#ServiceAvailabilityAcrossRegions
   description = "region"
@@ -38,6 +28,18 @@ variable "user_id" {
   type        = string
 }
 
+# general oci parameters
+variable "compartment_id" {
+  description = "compartment id"
+  type        = string
+}
+
+variable "label_prefix" {
+  description = "a string that will be prependend to all resources"
+  default     = "dev"
+  type        = string
+}
+
 # ssh keys
 variable "ssh_private_key_path" {
   description = "path to ssh private key"
@@ -49,26 +51,12 @@ variable "ssh_public_key_path" {
   type        = string
 }
 
-# general oci parameters
-
-variable "label_prefix" {
-  description = "a string that will be prependend to all resources"
-  default     = "dev"
-  type        = string
-}
-
 # networking parameters
-
-variable "nat_gateway_enabled" {
-  description = "whether to create a nat gateway"
-  default     = true
-  type        = bool
-}
 
 variable "netnum" {
   description = "zero-based index of the subnet when the network is masked with the newbit."
   default = {
-    admin    = 33
+    operator = 33
     bastion  = 32
     int_lb   = 16
     master   = 48
@@ -82,7 +70,7 @@ variable "netnum" {
 variable "newbits" {
   description = "new mask for the subnet within the virtual network. use as newbits parameter for cidrsubnet function"
   default = {
-    admin    = 13
+    operator = 13
     bastion  = 13
     lb       = 11
     master   = 12
@@ -90,12 +78,6 @@ variable "newbits" {
     worker   = 2
   }
   type = map
-}
-
-variable "service_gateway_enabled" {
-  description = "whether to create a service gateway"
-  default     = true
-  type        = bool
 }
 
 variable "vcn_cidr" {
@@ -121,12 +103,6 @@ variable "bastion_access" {
   description = "cidr from where the bastion can be sshed into. default is ANYWHERE and equivalent to 0.0.0.0/0"
   default     = "ANYWHERE"
   type        = string
-}
-
-variable "bastion_enabled" {
-  description = "whether to create a bastion host"
-  default     = true
-  type        = bool
 }
 
 variable "bastion_image_id" {
@@ -177,64 +153,58 @@ variable "bastion_timezone" {
   type        = string
 }
 
-# admin server
+# operator server
 
-variable "admin_enabled" {
-  description = "whether to create an admin server in a private subnet"
-  default     = false
-  type        = bool
-}
-
-variable "admin_image_id" {
-  description = "image id to use for admin server. set either an image id or to Oracle. if value is set to Oracle, the default Oracle Linux platform image will be used."
+variable "operator_image_id" {
+  description = "image id to use for operator server. set either an image id or to Oracle. if value is set to Oracle, the default Oracle Linux platform image will be used."
   default     = "Oracle"
   type        = string
 }
 
-variable "admin_instance_principal" {
-  description = "enable the admin server host to call OCI API services without requiring api key"
+variable "operator_instance_principal" {
+  description = "enable the operator server host to call OCI API services without requiring api key"
   default     = true
   type        = bool
 }
 
-variable "admin_notification_enabled" {
-  description = "whether to enable notification on the admin host"
+variable "operator_notification_enabled" {
+  description = "whether to enable notification on the operator host"
   default     = false
   type        = bool
 }
 
-variable "admin_notification_endpoint" {
-  description = "the subscription notification endpoint for the admin. email address to be notified."
+variable "operator_notification_endpoint" {
+  description = "the subscription notification endpoint for the operator. email address to be notified."
   default     = ""
   type        = string
 }
 
-variable "admin_notification_protocol" {
+variable "operator_notification_protocol" {
   description = "the notification protocol used."
   default     = "EMAIL"
   type        = string
 }
 
-variable "admin_notification_topic" {
+variable "operator_notification_topic" {
   description = "the name of the notification topic."
-  default     = "admin"
+  default     = "operator"
   type        = string
 }
 
-variable "admin_package_upgrade" {
+variable "operator_package_upgrade" {
   description = "whether to upgrade the bastion host packages after provisioning. it’s useful to set this to false during development so the bastion is provisioned faster."
   default     = true
   type        = bool
 }
 
-variable "admin_shape" {
-  description = "shape of admin server instance"
+variable "operator_shape" {
+  description = "shape of operator server instance"
   default     = "VM.Standard.E2.1"
   type        = string
 }
 
-variable "admin_timezone" {
-  description = "the preferred timezone for the admin host."
+variable "operator_timezone" {
+  description = "the preferred timezone for the operator host."
   default     = "Australia/Sydney"
   type        = string
 }
@@ -244,7 +214,7 @@ variable "availability_domains" {
   description = "Availability Domains where to provision specific resources"
   default = {
     bastion  = 1
-    admin    = 1
+    operator = 1
     operator = 1
   }
   type = map
@@ -295,33 +265,8 @@ variable "master_timezone" {
   type        = string
 }
 
-# olcne operator
-variable "operator_image_id" {
-  description = "image id to use for operator node."
-  default     = "Oracle Linux"
-  type        = string
-}
-
-variable "operator_package_upgrade" {
-  description = "whether to upgrade the operator host packages after provisioning. it’s useful to set this to false during development so the operator nodes are provisioned faster."
-  default     = true
-  type        = bool
-}
-
-variable "operator_shape" {
-  description = "shape of operator instance"
-  default     = "VM.Standard.E2.2"
-  type        = string
-}
-
-variable "operator_timezone" {
-  description = "the preferred timezone for the operator nodes."
-  default     = "Australia/Sydney"
-  type        = string
-}
-
 variable "secret_id" {
-  description = "id of secret where the private ssh key is stored in encrypted format"
+  description = "id of OCI secret where the private ssh key is stored in encrypted format"
   type        = string
 }
 
@@ -431,4 +376,28 @@ variable "public_lb_shape" {
   description = "the preferred shape of the public load balancer"
   default     = "100Mbps"
   type        = string
+}
+
+# tagging
+variable "tags" {
+  default = {
+    # vcn, bastion and operator tags are required
+    # add more tags in each as desired
+    vcn = {
+      # department = "finance"
+      environment = "dev"
+    }
+    bastion = {
+      # department  = "finance"
+      environment = "dev"
+      role        = "bastion"
+    }
+    operator = {
+      # department = "finance"
+      environment = "dev"
+      role        = "operator"
+    }
+  }
+  description = "Tags to apply to different resources."
+  type        = map(any)
 }

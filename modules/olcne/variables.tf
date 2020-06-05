@@ -79,6 +79,8 @@ variable "loadbalancer_ip_address" {
 variable "container_registry_urls" {
   description = "urls of container-registries"
   default = {
+    ap-chuncheon-1 = "container-registry-yny.oracle.com"
+    ap-hyderabad-1 = "container-registry-hyd.oracle.com"
     ap-sydney-1    = "container-registry-syd.oracle.com"
     ap-melbourne-1 = "container-registry-mel.oracle.com"
     ap-mumbai-1    = "container-registry-bom.oracle.com"

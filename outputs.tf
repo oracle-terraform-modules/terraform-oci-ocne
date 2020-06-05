@@ -3,15 +3,15 @@
 
 output "ssh_to_bastion" {
   description = "ssh to bastion"
-  value       = "ssh -i ${var.ssh_private_key_path} -J opc@${module.bastion.bastion_public_ip}"
+  value       = "ssh -i ${var.ssh_private_key_path} -J opc@${module.base.bastion_public_ip}"
 }
 
 output "ssh_to_operator" {
   description = "ssh to operator"
-  value       = "ssh -i ${var.ssh_private_key_path} -J opc@${module.bastion.bastion_public_ip} opc@${module.operator.operator_private_ip}"
+  value       = "ssh -i ${var.ssh_private_key_path} -J opc@${module.base.bastion_public_ip} opc@${module.base.operator_private_ip}"
 }
 
 output "ssh_to_master" {
   description = "ssh to primary master node"
-  value       = "ssh -i ${var.ssh_private_key_path} -J opc@${module.bastion.bastion_public_ip} opc@${module.master.master_vip}"
+  value       = "ssh -i ${var.ssh_private_key_path} -J opc@${module.base.bastion_public_ip} opc@${module.master.master_vip}"
 }

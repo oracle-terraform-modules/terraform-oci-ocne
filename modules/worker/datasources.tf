@@ -4,7 +4,7 @@
 data "oci_core_images" "worker_images" {
   compartment_id           = var.compartment_id
   operating_system         = "Oracle Linux"
-  operating_system_version = "7.7"
+  operating_system_version = "7.8"
   shape                    = var.worker_shape
   sort_by                  = "TIMECREATED"
 }
@@ -12,7 +12,6 @@ data "oci_core_images" "worker_images" {
 data "template_file" "worker_template" {
   template = file("${path.module}/scripts/worker.template.sh")
 }
-
 
 data "template_file" "worker_cloud_init_file" {
   template = file("${path.module}/cloudinit/worker.template.yaml")

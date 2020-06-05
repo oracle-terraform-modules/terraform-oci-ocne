@@ -5,127 +5,25 @@ terraform {
   required_version = ">= 0.12.24"
 }
 
-module "vcn" {
-  source  = "oracle-terraform-modules/vcn/oci"
-  version = "1.0.1"
-
-  region = var.region
+module "base" {
+  source  = "oracle-terraform-modules/base/oci"
+  version = "1.2.2"
 
   # general oci parameters
-  compartment_id = var.compartment_id
-  label_prefix   = var.label_prefix
+  oci_base_general = local.oci_base_general
+
+  # identity
+  oci_base_provider = local.oci_base_provider
 
   # vcn parameters
-  internet_gateway_enabled = true
-  nat_gateway_enabled      = true
-  service_gateway_enabled  = true
-  vcn_cidr                 = var.vcn_cidr
-  vcn_dns_label            = var.vcn_dns_label
-  vcn_name                 = var.vcn_name
-
-  tags = {
-    environment = "dev"
-    department  = "finance"
-  }
-}
-
-module "bastion" {
-  source  = "oracle-terraform-modules/bastion/oci"
-  version = "1.0.1"
-
-  # provider identity parameters
-  api_fingerprint      = var.api_fingerprint
-  api_private_key_path = var.api_private_key_path
-  region               = var.region
-  tenancy_id           = var.tenancy_id
-  user_id              = var.user_id
-
-  # general oci parameters
-  compartment_id = var.compartment_id
-  label_prefix   = var.label_prefix
-
-  # region parameters
-  availability_domain = var.availability_domains["bastion"]
+  oci_base_vcn = local.oci_base_vcn
 
   # bastion parameters
-  bastion_access   = var.bastion_access
-  bastion_enabled  = true
-  bastion_image_id = "Autonomous"
-  bastion_shape    = "VM.Standard.E2.2"
-  bastion_upgrade  = false
-  timezone         = var.bastion_timezone
+  oci_base_bastion = local.oci_base_bastion
 
-  # network parameters
-  ig_route_id = module.vcn.ig_route_id
-  netnum      = var.netnum["bastion"]
-  newbits     = var.newbits["bastion"]
-  vcn_id      = module.vcn.vcn_id
+  # operator server parameters
+  oci_base_operator = local.oci_base_operator
 
-  # ssh key parameters
-  ssh_public_key      = ""
-  ssh_public_key_path = var.ssh_public_key_path
-
-  # notification
-  notification_enabled  = false
-  notification_endpoint = ""
-  notification_protocol = "EMAIL"
-  notification_topic    = "bastion"
-
-  tags = {
-    department  = "finance"
-    environment = "dev"
-    role        = "bastion"
-  }
-}
-
-module "operator" {
-  source  = "oracle-terraform-modules/operator/oci"
-  version = "1.0.6"
-
-  # provider identity parameters
-  api_fingerprint      = var.api_fingerprint
-  api_private_key_path = var.api_private_key_path
-  region               = var.region
-  tenancy_id           = var.tenancy_id
-  user_id              = var.user_id
-
-  # general oci parameters
-  compartment_id = var.compartment_id
-  label_prefix   = var.label_prefix
-
-  # region parameters
-  availability_domain = var.availability_domains["operator"]
-
-  # operator parameters
-  operator_enabled            = true
-  operator_image_id           = "Oracle"
-  operator_instance_principal = true
-  operator_shape              = "VM.Standard.E2.2"
-  operator_upgrade            = false
-  timezone                    = var.operator_timezone
-
-  # network parameters
-  nat_route_id = module.vcn.nat_route_id
-  netnum       = var.netnum["operator"]
-  newbits      = var.newbits["operator"]
-  nsg_ids      = list(module.network.nsg_ids["operator"])
-  vcn_id       = module.vcn.vcn_id
-
-  # ssh key parameters
-  ssh_public_key      = ""
-  ssh_public_key_path = var.ssh_public_key_path
-
-  # notification
-  notification_enabled  = false
-  notification_endpoint = ""
-  notification_protocol = "EMAIL"
-  notification_topic    = "operator"
-
-  tags = {
-    department  = "finance"
-    environment = "dev"
-    role        = "operator"
-  }
 }
 
 module "network" {
@@ -134,14 +32,14 @@ module "network" {
   # general oci parameters
   compartment_id = var.compartment_id
   label_prefix   = var.label_prefix
-  ad_names       = sort(data.template_file.ad_names.*.rendered)
+  ad_names       = module.base.ad_names
 
   # network parameters
-  ig_route_id  = module.vcn.ig_route_id
-  nat_route_id = module.vcn.nat_route_id
+  ig_route_id  = module.base.ig_route_id
+  nat_route_id = module.base.nat_route_id
   netnum       = var.netnum
   newbits      = var.newbits
-  vcn_id       = module.vcn.vcn_id
+  vcn_id       = module.base.vcn_id
 }
 
 module "master" {
@@ -150,7 +48,7 @@ module "master" {
   # general oci parameters
   compartment_id = var.compartment_id
   label_prefix   = var.label_prefix
-  ad_names       = sort(data.template_file.ad_names.*.rendered)
+  ad_names       = module.base.ad_names
 
   # networking parameters
   nsg_id       = module.network.nsg_ids["master"]
@@ -174,7 +72,7 @@ module "worker" {
   # general oci parameters
   compartment_id = var.compartment_id
   label_prefix   = var.label_prefix
-  ad_names       = sort(data.template_file.ad_names.*.rendered)
+  ad_names       = module.base.ad_names
 
   # networking parameters
   nsg_id       = module.network.nsg_ids["worker"]
@@ -226,11 +124,11 @@ module "olcne" {
   region         = var.region
 
   # bastion
-  bastion_public_ip    = module.bastion.bastion_public_ip
+  bastion_public_ip    = module.base.bastion_public_ip
   ssh_private_key_path = var.ssh_private_key_path
 
   # operator
-  operator_ip = module.operator.operator_private_ip
+  operator_ip = module.base.operator_private_ip
 
   # list of master nodes
   olcne_masters = local.olcne_masters
@@ -250,5 +148,4 @@ module "olcne" {
   helm_version = var.helm_version
 
   loadbalancer_ip_address = module.loadbalancer.pub_lb_ip
-
 }

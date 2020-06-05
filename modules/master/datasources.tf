@@ -4,7 +4,7 @@
 data "oci_core_images" "master_images" {
   compartment_id           = var.compartment_id
   operating_system         = "Oracle Linux"
-  operating_system_version = "7.7"
+  operating_system_version = "7.8"
   shape                    = var.master_shape
   sort_by                  = "TIMECREATED"
 }
