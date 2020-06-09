@@ -51,17 +51,17 @@ Start by installing Terraform and configuring your path.
 
 === Download Terraform
 
-1. Open your browser and navigate to the {uri-terraform-download}[Terraform download page]. You need version 0.12.16+.
+. Open your browser and navigate to the {uri-terraform-download}[Terraform download page]. You need version 0.12.16+.
 
-2. Download the appropriate version for your operating system
+. Download the appropriate version for your operating system
 
-3. Extract the the contents of compressed file and copy the terraform binary to a location that is in your path (see next section below)
+. Extract the the contents of compressed file and copy the terraform binary to a location that is in your path (see next section below)
 
 === Configure path on Linux/macOS
 
-1. Open a terminal and type the following:
+Open a terminal and type the following:
 
-+
+
 [source,bash]
 ----
 $ sudo mv /path/to/terraform /usr/local/bin
@@ -114,6 +114,6 @@ Follow the documentation for obtaining the tenancy and user ids on {uri-oci-ocid
 
 To obtain the compartment OCID:
 
-1. Navigate to Identity > Compartments
-2. Click on your Compartment
-3. Locate OCID on the page and click on 'Copy'
+. Navigate to Identity > Compartments
+. Click on your Compartment
+. Locate OCID on the page and click on 'Copy'

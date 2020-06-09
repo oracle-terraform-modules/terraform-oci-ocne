@@ -16,6 +16,7 @@
 [uri-kubernetes]: https://kubernetes.io/
 [uri-networks-subnets-cidr]: https://erikberg.com/notes/networks.html
 [uri-oci]: https://cloud.oracle.com/cloud-infrastructure
+[uri-oci-bmshapes]:https://docs.cloud.oracle.com/en-us/iaas/Content/Compute/References/computeshapes.htm#bmshapes
 [uri-oci-documentation]: https://docs.cloud.oracle.com/iaas/Content/home.htm
 [uri-oci-key]: https://docs.cloud.oracle.com/en-us/iaas/Content/KeyManagement/Tasks/managingkeys.htm
 [uri-oci-vault]: https://docs.cloud.oracle.com/en-us/iaas/Content/KeyManagement/Tasks/managingvaults.htm
@@ -27,6 +28,7 @@
 [uri-terraform]: https://www.terraform.io
 [uri-terraform-cidrsubnet-deconstructed]: http://blog.itsjustcode.net/blog/2017/11/18/terraform-cidrsubnet-deconstructed/
 [uri-terraform-oci]: https://www.terraform.io/docs/providers/oci/index.html
+[uri-terraform-oci-base]: https://github.com/oracle-terraform-modules/terraform-oci-base
 [uri-terraform-oke]: https://github.com/oracle-terraform-modules/terraform-oci-oke
 [uri-terraform-options]: https://github.com/oracle-terraform-modules/terraform-oci-olcne/blob/master/docs/terraformoptions.adoc
 [uri-terraform-hashircorp-examples]: https://github.com/hashicorp/terraform-guides/tree/master/infrastructure-as-code/terraform-0.12-examples
@@ -106,7 +108,7 @@ Create a vault to store the SSH keys securely.
 
 ### Create the base infrastructure
 
-The base infrastructure consists of the bastion and the admin server. It reuses the {uri-terraform-oci-base}[terraform-oci-base] module to create a VCN, a bastion host and an operator host with `instance_principal` enabled.
+The base infrastructure consists of the bastion and the admin server. It reuses the [terraform-oci-base][uri-terraform-oci-base] module to create a VCN, a bastion host and an operator host with `instance_principal` enabled.
 
 - Copy `terraform.tfvars.example`:
 
@@ -201,7 +203,7 @@ By default, three worker nodes are created. You can change this by setting _work
 
 If you want to use Kata containers, you must:
 
-- Select one of the {uri-oci-bmshapes}[Bare Metal shapes] for your worker nodes.
+- Select one of the [Bare Metal shapes][uri-oci-bmshapes] for your worker nodes.
 - Enable the creation of kata runtime class in `terraform.tfvars`.
 
 ````
