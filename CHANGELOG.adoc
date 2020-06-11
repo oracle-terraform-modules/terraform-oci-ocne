@@ -7,9 +7,9 @@ All notable changes to this project are documented in this file.
 
 The format is based on {uri-changelog}[Keep a Changelog].
 
-== v0.1.1 (May 14, 2020)
+== v0.1.1 (June 12, 2020)
 
-* Upgraded base module to 1.2.2
+* Upgraded base module to 1.2.3
 * Use operator from base module as olcne operator
 * Set default networking parameters and removed redundant variables
 * Upgraded Oracle Linux version to 7.8
