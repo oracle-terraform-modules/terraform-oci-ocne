@@ -128,12 +128,6 @@ ssh_private_key_path = "/path/to/ssh_private_key"
 ssh_public_key_path = "/path/to/ssh_public_key"
 ````
 
-- In terraform.tfvars, enable only the bastion host:
-
-````
-bastion_enabled = true
-````
-
 - Run Terraform and create the base module:
 
 ````

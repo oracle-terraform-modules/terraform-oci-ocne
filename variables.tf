@@ -215,7 +215,6 @@ variable "availability_domains" {
   default = {
     bastion  = 1
     operator = 1
-    operator = 1
   }
   type = map
 }

@@ -53,7 +53,7 @@ bastion_access = "ANYWHERE"
 
 bastion_image_id = "Autonomous"
 
-bastion_notification_enabled = false
+bastion_notification_enabled = true
 
 bastion_notification_endpoint = ""
 
@@ -88,7 +88,6 @@ operator_timezone = "Australia/Sydney"
 availability_domains = {
   bastion  = 1
   operator = 1
-  operator = 1
 }
 
 # olcne
@@ -103,15 +102,6 @@ master_shape = "VM.Standard.E2.2"
 master_size = 1
 
 master_timezone = "Australia/Sydney"
-
-# olcne operator
-operator_image_id = "Oracle"
-
-operator_package_upgrade = false
-
-operator_shape = "VM.Standard.E2.2"
-
-operator_timezone = "Australia/Sydney"
 
 # private key for operator
 

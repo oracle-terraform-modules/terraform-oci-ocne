@@ -11,16 +11,6 @@ resource "oci_core_subnet" "masters" {
   vcn_id                     = var.vcn_id
 }
 
-# resource "oci_core_subnet" "operator" {
-#   cidr_block                 = local.operator_subnet
-#   compartment_id             = var.compartment_id
-#   display_name               = "${var.label_prefix}-operator"
-#   dns_label                  = "operator"
-#   prohibit_public_ip_on_vnic = true
-#   route_table_id             = var.nat_route_id
-#   vcn_id                     = var.vcn_id
-# }
-
 resource "oci_core_subnet" "workers" {
   cidr_block                 = local.worker_subnet
   compartment_id             = var.compartment_id
