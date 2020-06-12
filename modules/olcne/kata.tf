@@ -9,14 +9,14 @@ data "template_file" "kata" {
 resource null_resource "create_kata_runtime" {
   connection {
     host        = local.operator_private_ip
-    private_key = file(var.olcne_operator.ssh_private_key_path)
+    private_key = file(var.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
 
-    bastion_host        = var.olcne_bastion.bastion_public_ip
+    bastion_host        = var.bastion_public_ip
     bastion_user        = "opc"
-    bastion_private_key = file(var.olcne_bastion.ssh_private_key_path)
+    bastion_private_key = file(var.ssh_private_key_path)
   }
 
   depends_on = [null_resource.get_kubeconfig]

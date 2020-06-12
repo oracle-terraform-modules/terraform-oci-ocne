@@ -3,9 +3,9 @@
 
 # operator nsg and rule
 resource "oci_core_network_security_group" "operator" {
-  compartment_id = var.olcne_general.compartment_id
-  display_name   = "${var.olcne_general.label_prefix}-operator"
-  vcn_id         = var.olcne_network_vcn.vcn_id
+  compartment_id = var.compartment_id
+  display_name   = "${var.label_prefix}-operator"
+  vcn_id         = var.vcn_id
 }
 
 resource "oci_core_network_security_group_security_rule" "operator_internet" {
@@ -49,9 +49,9 @@ resource "oci_core_network_security_group_security_rule" "operator" {
 
 # master nsg and rule
 resource "oci_core_network_security_group" "master" {
-  compartment_id = var.olcne_general.compartment_id
-  display_name   = "${var.olcne_general.label_prefix}-master"
-  vcn_id         = var.olcne_network_vcn.vcn_id
+  compartment_id = var.compartment_id
+  display_name   = "${var.label_prefix}-master"
+  vcn_id         = var.vcn_id
 }
 
 resource "oci_core_network_security_group_security_rule" "master_internet" {
@@ -121,9 +121,9 @@ resource "oci_core_network_security_group_security_rule" "master_vrrp" {
 
 # worker nsg and rule
 resource "oci_core_network_security_group" "worker" {
-  compartment_id = var.olcne_general.compartment_id
-  display_name   = "${var.olcne_general.label_prefix}-worker"
-  vcn_id         = var.olcne_network_vcn.vcn_id
+  compartment_id = var.compartment_id
+  display_name   = "${var.label_prefix}-worker"
+  vcn_id         = var.vcn_id
 }
 
 resource "oci_core_network_security_group_security_rule" "worker_internet" {
@@ -222,9 +222,9 @@ resource "oci_core_network_security_group_security_rule" "worker_udp_nodeport" {
 
 # public load balancer nsg and rule
 resource "oci_core_network_security_group" "pub_lb" {
-  compartment_id = var.olcne_general.compartment_id
-  display_name   = "${var.olcne_general.label_prefix}-lb"
-  vcn_id         = var.olcne_network_vcn.vcn_id
+  compartment_id = var.compartment_id
+  display_name   = "${var.label_prefix}-lb"
+  vcn_id         = var.vcn_id
 }
 
 resource "oci_core_network_security_group_security_rule" "pub_lb" {

@@ -1,56 +1,33 @@
 # Copyright 2020, Oracle Corporation and/or affiliates.  
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# provider
-
-variable "oci_provider" {
-  type = object({
-    api_fingerprint      = string
-    api_private_key_path = string
-    home_region          = string
-    region               = string
-    tenancy_id           = string
-    user_id              = string
-  })
+# general oci parameters
+variable "compartment_id" {
+  type = string
 }
 
-# general
-variable "olcne_general" {
-  type = object({
-    ad_names       = list(string)
-    compartment_id = string
-    label_prefix   = string
-  })
+variable "label_prefix" {
+  type = string
+}
+
+variable "region" {
+  type = string
 }
 
 # bastion
-variable "olcne_bastion" {
-  type = object({
-    bastion_public_ip    = string
-    ssh_private_key_path = string
-  })
+variable "bastion_public_ip" {
+  type = string
 }
 
-# operator
-
-variable "olcne_operator" {
-  type = object({
-    operator_image_id    = string
-    operator_shape       = string
-    operator_upgrade     = bool
-    ssh_private_key_path = string
-    ssh_public_key_path  = string
-    timezone             = string
-  })
+variable "ssh_private_key_path" {
+  type = string
 }
 
-variable "olcne_operator_network" {
-  type = object({
-    nsg_ids      = map(string)
-    subnet_id    = string
-    subnet_label = string
-  })
+# operator 
+variable "operator_ip" {
+  type = string
 }
+
 
 variable "olcne_masters" {
   type = object({
@@ -102,6 +79,8 @@ variable "loadbalancer_ip_address" {
 variable "container_registry_urls" {
   description = "urls of container-registries"
   default = {
+    ap-chuncheon-1 = "container-registry-yny.oracle.com"
+    ap-hyderabad-1 = "container-registry-hyd.oracle.com"
     ap-sydney-1    = "container-registry-syd.oracle.com"
     ap-melbourne-1 = "container-registry-mel.oracle.com"
     ap-mumbai-1    = "container-registry-bom.oracle.com"

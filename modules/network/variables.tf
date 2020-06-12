@@ -2,34 +2,36 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # general oci parameters
+variable "compartment_id" {
+  type = string
+}
 
-variable "olcne_general" {
-  type = object({
-    ad_names       = list(string)
-    compartment_id = string
-    label_prefix   = string
-  })
+variable "label_prefix" {
+  type = string
+}
+
+# region parameters
+variable "ad_names" {
+  type = list(string)
 }
 
 # networking parameters
-
-variable "olcne_network_vcn" {
-  type = object({
-    ig_route_id                = string
-    is_service_gateway_enabled = bool
-    nat_route_id               = string
-    netnum                     = map(number)
-    newbits                    = map(number)
-    vcn_cidr                   = string
-    vcn_id                     = string
-  })
+variable "ig_route_id" {
+  type = string
 }
 
-# olcne node
+variable "nat_route_id" {
+  type = string
+}
 
-variable "olcne_network_access" {
-  type = object({
-    allow_master_ssh_access = bool
-    allow_worker_ssh_access = bool
-  })
+variable "netnum" {
+  type = map(number)
+}
+
+variable "newbits" {
+  type = map(number)
+}
+
+variable "vcn_id" {
+  type = string
 }

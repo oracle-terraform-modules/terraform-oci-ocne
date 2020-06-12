@@ -8,8 +8,7 @@ yum update --security
 # enable olcne yum channels
 yum install -y oracle-olcne-release-el7
 yum-config-manager --disable ol7_olcne
-yum-config-manager --enable ol7_olcne11 ol7_kvm_utils ol7_addons ol7_latest 
-# ol7_UEKR5
+yum-config-manager --enable ol7_olcne11 ol7_kvm_utils ol7_addons ol7_latest ol7_UEKR5
 
 # enable chronyd
 systemctl enable --now chronyd

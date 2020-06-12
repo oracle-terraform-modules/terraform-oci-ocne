@@ -2,36 +2,36 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
 
 resource "oci_core_instance_configuration" "worker" {
-  compartment_id = var.olcne_general.compartment_id
+  compartment_id = var.compartment_id
 
-  display_name = "${var.olcne_general.label_prefix}-worker"
+  display_name = "${var.label_prefix}-worker"
 
   instance_details {
     instance_type = "compute"
 
     launch_details {
-      compartment_id = var.olcne_general.compartment_id
+      compartment_id = var.compartment_id
 
       create_vnic_details {
         assign_public_ip = false
-        display_name     = "${var.olcne_general.label_prefix}-worker"
+        display_name     = "${var.label_prefix}-worker"
         hostname_label   = "worker"
-        nsg_ids          = [lookup(var.olcne_worker_network.nsg_ids, "worker")]
-        subnet_id        = var.olcne_worker_network.subnet_id
+        nsg_ids          = [var.nsg_id]
+        subnet_id        = var.subnet_id
       }
 
-      display_name = "${var.olcne_general.label_prefix}-worker"
+      display_name = "${var.label_prefix}-worker"
 
       extended_metadata = {
-        subnet_id = var.olcne_worker_network.subnet_id
+        subnet_id = var.subnet_id
       }
 
       metadata = {
-        ssh_authorized_keys = file(var.olcne_worker.ssh_public_key_path)
+        ssh_authorized_keys = file(var.ssh_public_key_path)
         user_data           = data.template_cloudinit_config.worker.rendered
       }
 
-      shape = var.olcne_worker.worker_shape
+      shape = var.worker_shape
       source_details {
         source_type = "image"
         image_id    = local.worker_image_id
@@ -44,18 +44,18 @@ resource "oci_core_instance_configuration" "worker" {
 }
 
 resource "oci_core_instance_pool" "worker" {
-  compartment_id            = var.olcne_general.compartment_id
+  compartment_id            = var.compartment_id
   depends_on                = [oci_core_instance_configuration.worker]
-  display_name              = "${var.olcne_general.label_prefix}-worker"
+  display_name              = "${var.label_prefix}-worker"
   instance_configuration_id = oci_core_instance_configuration.worker.id
 
   dynamic "placement_configurations" {
     iterator = ad_iterator
-    for_each = var.olcne_general.ad_names
+    for_each = var.ad_names
 
     content {
       availability_domain = ad_iterator.value
-      primary_subnet_id   = var.olcne_worker_network.subnet_id
+      primary_subnet_id   = var.subnet_id
     }
   }
 
@@ -65,12 +65,16 @@ resource "oci_core_instance_pool" "worker" {
     for_each = local.ingress_ports
 
     content {
-      backend_set_name = "${var.olcne_general.label_prefix}-ic-${port_iterator.value}"
+      backend_set_name = "${var.label_prefix}-ic-${port_iterator.value}"
       load_balancer_id = var.oci_loadbalancer_id
       port             = port_iterator.value
       vnic_selection   = "PrimaryVnic"
     }
   }
 
-  size = var.olcne_worker.size
+  lifecycle {
+    ignore_changes = [display_name]
+  }
+
+  size = var.worker_size
 }

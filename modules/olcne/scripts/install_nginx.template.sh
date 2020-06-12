@@ -24,11 +24,6 @@ helm install nginx stable/nginx-ingress \
 --set controller.service.nodePorts.https=30443 \
 --set controller.service.ports.http=30080 \
 --set controller.service.ports.https=30443 \
---set defaultBackend.enabled=true \
---set defaultBackend.name=nginxdefaultbackend \
---set defaultBackend.service.type=NodePort \
---set defaultBackend.port=31080 \
---set defaultBackend.service.type=NodePort \
 --set rbac.create=true 2> /dev/null
 
 # patch to add nodeports for nginx health check

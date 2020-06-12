@@ -24,28 +24,22 @@ label_prefix = "dev"
 
 # networking
 
-nat_gateway_enabled = true
-
 netnum = {
-  admin    = 33
   bastion  = 32
   int_lb   = 16
-  masters   = 48
-  operator = 18
+  masters  = 48
+  operator = 33
   pub_lb   = 17
   workers  = 1
 }
 
 newbits = {
-  admin    = 13
   bastion  = 13
   lb       = 11
-  masters   = 12
+  masters  = 12
   operator = 13
   workers  = 2
 }
-
-service_gateway_enabled = true
 
 vcn_cidr = "10.0.0.0/16"
 
@@ -53,16 +47,13 @@ vcn_dns_label = "olcne"
 
 vcn_name = "olcne"
 
-
 # bastion
 
 bastion_access = "ANYWHERE"
 
-bastion_enabled = true
-
 bastion_image_id = "Autonomous"
 
-bastion_notification_enabled = false
+bastion_notification_enabled = true
 
 bastion_notification_endpoint = ""
 
@@ -76,31 +67,26 @@ bastion_shape = "VM.Standard.E2.2"
 
 bastion_timezone = "Australia/Sydney"
 
-admin_enabled = false
+operator_image_id = "Oracle"
 
-admin_image_id = "Oracle"
+operator_notification_enabled = false
 
-admin_instance_principal = false
+operator_notification_endpoint = ""
 
-admin_notification_enabled = false
+operator_notification_protocol = "EMAIL"
 
-admin_notification_endpoint = ""
+operator_notification_topic = ""
 
-admin_notification_protocol = "EMAIL"
+operator_package_upgrade = false
 
-admin_notification_topic = ""
+operator_shape = "VM.Standard.E2.2"
 
-admin_package_upgrade = false
-
-admin_shape = "VM.Standard.E2.2"
-
-admin_timezone = "Australia/Sydney"
+operator_timezone = "Australia/Sydney"
 
 # availability_domains
 
 availability_domains = {
   bastion  = 1
-  admin    = 1
   operator = 1
 }
 
@@ -116,15 +102,6 @@ master_shape = "VM.Standard.E2.2"
 master_size = 1
 
 master_timezone = "Australia/Sydney"
-
-# olcne operator
-operator_image_id = "Oracle"
-
-operator_package_upgrade = false
-
-operator_shape = "VM.Standard.E2.2"
-
-operator_timezone = "Australia/Sydney"
 
 # private key for operator
 

@@ -1,34 +1,58 @@
 # Copyright 2020, Oracle Corporation and/or affiliates.  
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# general
-
-variable "olcne_general" {
-  type = object({
-    ad_names       = list(string)
-    compartment_id = string
-    label_prefix   = string
-  })
+# general oci parameters
+variable "compartment_id" {
+  type = string
 }
 
-# master
-
-variable "olcne_master" {
-  type = object({
-    master_image_id     = string
-    master_shape        = string
-    master_upgrade      = bool
-    size                = number
-    ssh_public_key_path = string
-    timezone            = string
-  })
+variable "label_prefix" {
+  type = string
 }
 
-variable "olcne_master_network" {
-  type = object({
-    nsg_ids      = map(string)
-    subnet_id    = string
-    subnet_label = string
-    subnet_mask  = string
-  })
+# region parameters
+variable "ad_names" {
+  type = list(string)
+}
+
+# networking parameters
+variable "nsg_id" {
+  type = string
+}
+
+variable "subnet_id" {
+  type = string
+}
+
+variable "subnet_label" {
+  type = string
+}
+
+# master compute parameters
+variable "master_image_id" {
+  type = string
+}
+
+variable "master_shape" {
+  type = string
+}
+
+variable "master_size" {
+  type = number
+}
+
+variable "master_upgrade" {
+  type = string
+}
+
+variable "ssh_public_key" {
+  type = string
+}
+
+variable "ssh_public_key_path" {
+  type = string
+}
+
+variable "timezone" {
+  type = string
 }

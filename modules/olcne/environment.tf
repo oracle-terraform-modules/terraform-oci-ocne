@@ -8,14 +8,14 @@ data "template_file" "configure_api" {
 resource null_resource "configure_api" {
   connection {
     host        = local.operator_private_ip
-    private_key = file(var.olcne_operator.ssh_private_key_path)
+    private_key = file(var.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
 
-    bastion_host        = var.olcne_bastion.bastion_public_ip
+    bastion_host        = var.bastion_public_ip
     bastion_user        = "opc"
-    bastion_private_key = file(var.olcne_bastion.ssh_private_key_path)
+    bastion_private_key = file(var.ssh_private_key_path)
   }
 
   depends_on = [null_resource.create_certificate]
@@ -41,14 +41,14 @@ data "template_file" "configure_agent" {
 resource null_resource "configure_agent" {
   connection {
     host        = element(local.all_nodes, count.index)
-    private_key = file(var.olcne_operator.ssh_private_key_path)
+    private_key = file(var.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
 
-    bastion_host        = var.olcne_bastion.bastion_public_ip
+    bastion_host        = var.bastion_public_ip
     bastion_user        = "opc"
-    bastion_private_key = file(var.olcne_bastion.ssh_private_key_path)
+    bastion_private_key = file(var.ssh_private_key_path)
   }
 
   depends_on = [null_resource.configure_api]
@@ -79,14 +79,14 @@ data "template_file" "create_environment" {
 resource null_resource "create_environment" {
   connection {
     host        = local.operator_private_ip
-    private_key = file(var.olcne_operator.ssh_private_key_path)
+    private_key = file(var.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
 
-    bastion_host        = var.olcne_bastion.bastion_public_ip
+    bastion_host        = var.bastion_public_ip
     bastion_user        = "opc"
-    bastion_private_key = file(var.olcne_bastion.ssh_private_key_path)
+    bastion_private_key = file(var.ssh_private_key_path)
   }
 
   depends_on = [null_resource.configure_agent]

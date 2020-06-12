@@ -1,0 +1,605 @@
+= Terraform Options
+:idprefix:
+:idseparator: -
+:sectlinks:
+:sectnums:
+:uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-olcne
+
+:uri-rel-file-base: link:{uri-repo}/blob/master
+:uri-rel-tree-base: link:{uri-repo}/tree/master
+:uri-calico: https://www.projectcalico.org/
+:uri-calico-policy: https://docs.projectcalico.org/v3.8/getting-started/kubernetes/installation/other
+:uri-cert-manager: https://cert-manager.readthedocs.io/en/latest/
+:uri-docs: {uri-rel-file-base}/docs
+:uri-helm: https://helm.sh/
+:uri-kubernetes-hpa: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+:uri-metrics-server: https://github.com/kubernetes-incubator/metrics-server
+:uri-oci-images: https://docs.cloud.oracle.com/iaas/images/
+:uri-oci-kms: https://docs.cloud.oracle.com/iaas/Content/KeyManagement/Concepts/keyoverview.htm
+:uri-oci-loadbalancer-annotations: https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md
+:uri-oci-region: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm
+:uri-terraform-cidrsubnet: https://www.terraform.io/docs/configuration/functions/cidrsubnet.html
+:uri-timezones: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+
+Configuration Terraform Options:
+
+. link:#provider[Provider]
+. link:#general-oci[General OCI]
+. link:#ssh-keys[SSH Keys]
+. link:#oci-networking[OCI Networking]
+. link:#bastion-host[Bastion Host]
+. link:#operator-host[Operator Host]
+. link:#availability-domains[Availability Domains]
+. link:#tagging[tagging]
+. link:#olcne-master-nodes[OLCNE Master Nodes]
+. link:#olcne-worker-nodes[OLCNE Worker Nodes]
+. link:#certificate[Certificate]
+. link:#olcne[OLCNE]
+
+== Provider
+
+[stripes=odd,cols="1d,4d,3a,3a,3a", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default Value
+|Required/Optional
+
+
+|`api_fingerprint`
+|ssl fingerprint of api public key. 
+|
+|None
+|*Required*
+
+|`api_private_key_path`
+|path to api private key. 
+|
+|None
+|*Required*
+
+|`region`
+|Region where to provision the OLCNE cluster. {uri-oci-region}[List of regions]. 
+|
+|us-phoenix-1
+|*Required*
+
+|`tenancy_id`
+|Tenancy id of the user. 
+|
+|None
+|*Required*
+
+|`user_id`
+|User's id. 
+|
+|None
+|*Required*
+
+|===
+
+== General OCI
+
+[stripes=odd,cols="1d,4d,3a,3a,3a", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default Value
+|Required/Optional
+
+|`compartment_id`
+|Compartment id where the OKE Cluster will be provisioned. 
+|
+|None
+|*Required*
+
+|`label_prefix`
+|a string to be prepended to the name of resources. 
+|
+|
+|*Required*
+
+|===
+
+== SSH Keys
+
+[stripes=odd,cols="1d,4d,3a,3a,3a", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default Value
+|Required/Optional
+
+|`ssh_private_key_path`
+|path to ssh private key. The same key will be used to access worker nodes using SSH.
+|
+|None
+|*Required*
+
+|`ssh_public_key_path`
+|path to ssh public key. The same key will be used to access worker nodes using SSH.
+|
+|None
+|*Required*
+
+|===
+
+== OCI Networking
+
+[stripes=odd,cols="1d,4d,3a,3a,3a", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default Value
+|Required/Optional
+
+|`netnum`
+|0-based index of the subnets when the VCN's CIDR is masked with the corresponding newbit value and specified in the form of a map. Used to define the boundaries of the subnets. The values of the map are used as the netnum parameter in the {uri-terraform-cidrsubnet}[cidrsubnet] Terraform function. CIDR blocks for workers and load balancer subnets must not overlap with the CIDR blocks for Kubernetes pods (specified with _pods_cidr_ parameter).
+|e.g.
+[source]
+----
+netnum = {
+  bastion  = 32
+  int_lb   = 16
+  masters  = 48
+  operator = 33
+  pub_lb   = 17
+  workers  = 1
+}
+----
+|
+[source]
+----
+netnum = {
+  bastion  = 32
+  int_lb   = 16
+  masters  = 48
+  operator = 33
+  pub_lb   = 17
+  workers  = 1
+}
+----
+|Optional
+
+|`newbits`
+|The difference between the VCN's netmask and the desired subnets' masks specified in the form of a map. The values of the map are used as the newbits parameter in the {uri-terraform-cidrsubnet}[cidrsubnet] Terraform function to calculate each subnet's mask. CIDR blocks for workers and load balancer subnets must not overlap with the CIDR blocks for Kubernetes pods (specified with _pods_cidr_ parameter).
+|e.g.
+[source]
+----
+newbits = {
+  bastion  = 13
+  lb       = 11
+  masters  = 12
+  operator = 13
+  workers  = 2
+}
+----
+|
+[source]
+----
+newbits = {
+  bastion  = 13
+  lb       = 11
+  masters  = 12
+  operator = 13
+  workers  = 2
+}
+----
+|Optional
+
+|`vcn_cidr`
+|The VCN's CIDR block. The CIDR block specified for the VCN must not overlap with the CIDR block specified for the Kubernetes services (specified with _services_cidr_ parameter).
+|
+|10.0.0.0/16
+|Optional
+
+|`vcn_dns_label`
+|The internal DNS domain for resources created and prepended to "oraclevcn.com" which is the VCN-internal domain name.
+|
+|
+|*Required*
+
+|`vcn_name`
+|The name of the VCN that will be appended to the label_prefix. 
+|
+|olcne
+|*Required*
+
+|===
+
+== Bastion Host
+
+[stripes=odd,cols="1d,4d,3a,3a,3a", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default Value
+|Required/Optional
+
+|`bastion_access`
+|CIDR block in the form of a string to which ssh access to the bastion must be restricted to. *_ANYWHERE_* is equivalent to 0.0.0.0/0 and allows ssh access from anywhere.
+|XXX.XXX.XXX.XXX/YY
+|ANYWHERE
+|Optional
+
+|`bastion_image_id`
+|Custom image id for the bastion host
+|image_id or Autonomous. If the value is set to 'Autonomous', an Oracle Autonomous Linux Platform image will be used instead. If you want to use a custom image, set the image id instead.
+|Autonomous
+|Optional
+
+|`bastion_notification_enabled`
+|Whether to enable ONS notification for the bastion host.
+|true/false
+|false
+|Optional
+
+|`bastion_notification_endpoint`
+|The subscription notification endpoint. Email address to be notified. Only email is currently supported although ONS can also support Slack, Pagerduty among others.
+|
+|
+|Optional
+
+|`bastion_notification_protocol`
+|The notification protocol used.
+|EMAIL
+|EMAIL
+|Optional
+
+|`bastion_notification_topic`
+|The name of the notification topic
+|
+|bastion
+|Optional
+
+|`bastion_package_upgrade`
+|Whether to also upgrade the packages on the bastion host.
+|true/false
+|true
+|Optional
+
+|`bastion_shape`
+|The shape of bastion instance.
+|
+|VM.Standard.E2.1
+|Optional
+
+|`bastion_timezone`
+|The preferred timezone for the bastion host. {uri-timezones}[List of timezones]. 
+|
+|Australia/Sydney
+|*Required*
+
+|===
+
+== Operator Host
+
+[stripes=odd,cols="1d,4d,3a,3a,3a", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default Value
+|Required/Optional
+
+|`operator_image_id`
+|Custom image id for the operator host
+|image_id or Oracle. If the value is set to Oracle, an Oracle Platform image will be used instead.
+|Oracle
+|Optional
+
+|`operator_notification_enabled`
+|Whether to enable ONS notification for the operator host. *Do not enable for now*.
+|true/false
+|false
+|Optional
+
+|`operator_notification_endpoint`
+|The subscription notification endpoint. Email address to be notified. Only email is currently supported although ONS can also support Slack, Pagerduty among others.
+|
+|
+|Optional
+
+|`operator_notification_protocol`
+|The notification protocol used.
+|EMAIL
+|EMAIL
+|Optional
+
+|`operator_notification_topic`
+|The name of the notification topic
+|
+|operator
+|Optional
+
+|`operator_package_upgrade`
+|Whether to also upgrade the packages for the operator host.
+|true/false
+|true
+|Optional
+
+|`operator_shape`
+|The shape of operator instance. *Required*
+|
+|VM.Standard.E2.1
+|Optional
+
+|`operator_timezone`
+|The preferred timezone for the operator host. {uri-timezones}[List of timezones]. *Required*
+|e.g. Australia/Sydney
+|Australia/Sydney
+|Optional
+
+|===
+
+== Availability Domains
+
+[stripes=odd,cols="1d,4d,3a,3a,3a", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default Value
+|Required/Optional
+
+|`availability_domains`
+|The Availability Domain where to provision non-OKE resources e.g. bastion host. This is specified in the form of a map.
+| e.g.
+[source]
+----
+availability_domains = {
+  bastion     = 1
+  operator    = 1
+}
+----
+|
+[source]
+----
+  bastion     = 1
+  operator    = 1
+----
+|Optional
+
+|===
+
+== Tagging
+
+[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default Value
+|Required/Optional
+
+|`tags`
+|Tagging on the base module resources. This is specified in the form of a map of maps.
+| e.g.
+[source]
+----
+tags = {
+  # vcn, bastion and operator tags are required
+  # add more tags in each as desired
+  vcn = {
+    # department = "finance"
+    environment = "dev"
+  }
+  bastion = {
+    department  = "finance"
+    environment = "dev"
+    role        = "bastion"
+  }
+  operator = {
+    department = "finance"
+    environment = "dev"
+    role        = "operator"
+  }
+}
+----
+|
+[source]
+----
+tags = {
+  # vcn, bastion and operator tags are required
+  # add more tags in each as desired
+  vcn = {
+    environment = "dev"
+  }
+  bastion = {
+    environment = "dev"
+    role        = "bastion"
+  }
+  operator = {
+    environment = "dev"
+    role        = "operator"
+  }
+}
+----
+|Optional
+
+|===
+
+== OLCNE Master Nodes
+
+[stripes=odd,cols="1d,3d,3a,3a,3a", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default Value
+|Required/Optional
+
+|`master_image_id`
+|image id to use for master nodes. Provide an image id or a platform Oracle Linux image will be used.
+|
+|Oracle Linux
+|Optional
+
+|`master_package_upgrade`
+|Whether to upgrade the master host packages after provisioning. it’s useful to set this to false during development so the master nodes are provisioned faster.
+|true/false
+|true
+|Optional
+
+|`master_shape`
+|shape of master instance.
+|VM.Standard.E2.2
+|VM.Standard.E2.2
+|Optional
+
+|`master_size`
+|number of master nodes to provision. Leave at 1 in this release.
+|1
+|1
+|Optional
+
+|`master_timezone`
+|the preferred timezone for the master nodes.
+|Australia/Sydney
+|Australia/Sydney
+|Optional
+
+|===
+
+== OLCNE Worker Nodes
+
+[stripes=odd,cols="1d,3d,3a,3a,3a", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default Value
+|Required/Optional
+
+|`worker_image_id`
+|image id to use for worker nodes. Provide an image id or a platform Oracle Linux image will be used.
+|
+|Oracle Linux
+|Optional
+
+|`worker_package_upgrade`
+|Whether to upgrade the worker host packages after provisioning. it’s useful to set this to false during development so the worker nodes are provisioned faster.
+|true/false
+|true
+|Optional
+
+|`worker_shape`
+|shape of worker instance.
+|VM.Standard.E2.2
+|VM.Standard.E2.2
+|Optional
+
+|`worker_size`
+|number of worker nodes to provision. 
+|3
+|3
+|Optional
+
+|`worker_timezone`
+|the preferred timezone for the worker nodes.
+|Australia/Sydney
+|Australia/Sydney
+|Optional
+
+|===
+
+== Certififcate
+
+[stripes=odd,cols="1d,3d,3a,3a", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default Value
+|Required/Optional
+
+|`org_unit`
+|
+|
+|
+|*Required*
+
+|`org`
+|
+|
+|
+|*Required*
+
+|`city`
+|
+|
+|
+|*Required*
+
+|`state`
+|
+|
+|
+|*Required*
+
+|`country`
+|2 letter country code
+|
+|
+|*Required*
+
+|`common_name`
+|
+|
+|
+|*Required*
+
+|===
+
+== OLCNE
+
+[stripes=odd,cols="1d,3d,3a,3a,3a", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default Value
+|Required/Optional
+
+|`secret_id`
+|id of secret where the private ssh key is stored in encrypted format.
+|
+|
+|*Required*
+
+|`environment_name`
+|name of the environment. 
+|dev
+|dev
+|Optional
+
+|`cluster_name`
+|name of the cluster.
+|
+|olcne
+|Optional
+
+|`helm_version`
+|version of helm client to install on operator
+|
+|3.1.1
+|Optional
+
+|`create_kata_runtime`
+|whether to create kata runtime class
+|true/false
+|false
+|Optional
+
+|`kata_runtime_class_name`
+|the name of the kata runtime class
+|
+|kata
+|Optional
+
+|===
