@@ -2,5 +2,5 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  ingress_ports = [30080, 30443]
+  nginx_ingress_ports = [30080, 30443]
 }

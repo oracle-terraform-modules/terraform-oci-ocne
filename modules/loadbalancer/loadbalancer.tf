@@ -13,7 +13,7 @@ resource "oci_load_balancer_load_balancer" "pub_lb" {
 
 resource "oci_load_balancer_backend_set" "ingress_controller" {
   load_balancer_id = oci_load_balancer_load_balancer.pub_lb.id
-  name             = "${var.label_prefix}-ic-${local.ingress_ports[count.index]}"
+  name             = "${var.label_prefix}-ic-${local.nginx_ingress_ports[count.index]}"
 
   health_checker {
     interval_ms         = 10000
@@ -25,7 +25,7 @@ resource "oci_load_balancer_backend_set" "ingress_controller" {
 
   policy = "ROUND_ROBIN"
 
-  count = length(local.ingress_ports)
+  count = length(local.nginx_ingress_ports)
 }
 
 resource "oci_load_balancer_listener" "http_listener" {

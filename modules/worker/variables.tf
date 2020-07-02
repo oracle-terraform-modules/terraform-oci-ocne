@@ -57,6 +57,6 @@ variable "timezone" {
   type = string
 }
 
-variable "oci_loadbalancer_id" {
+variable "nginx_oci_loadbalancer_id" {
   type = string
 }

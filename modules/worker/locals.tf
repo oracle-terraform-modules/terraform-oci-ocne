@@ -24,5 +24,5 @@ locals {
     vnic.private_ip_address
   ]
 
-  ingress_ports = [30080, 30443]
+  nginx_ingress_ports = [30080, 30443]
 }

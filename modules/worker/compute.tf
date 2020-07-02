@@ -66,7 +66,7 @@ resource "oci_core_instance_pool" "worker" {
 
     content {
       backend_set_name = "${var.label_prefix}-ic-${port_iterator.value}"
-      load_balancer_id = var.oci_loadbalancer_id
+      load_balancer_id = var.nginx_oci_loadbalancer_id
       port             = port_iterator.value
       vnic_selection   = "PrimaryVnic"
     }
