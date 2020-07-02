@@ -60,26 +60,12 @@ resource "oci_core_instance_pool" "worker" {
   }
 
   dynamic "load_balancers" {
-
-    iterator = port_iterator
-    for_each = local.nginx_ingress_ports
+    for_each = local.ingress
 
     content {
-      backend_set_name = "${var.label_prefix}-ic-${port_iterator.value}"
-      load_balancer_id = var.nginx_oci_loadbalancer_id
-      port             = port_iterator.value
-      vnic_selection   = "PrimaryVnic"
-    }
-  }
-  dynamic "load_balancers" {
-
-    iterator = port_iterator
-    for_each = local.istio_ingress_ports
-
-    content {
-      backend_set_name = "${var.label_prefix}-ic-${port_iterator.value}"
-      load_balancer_id = var.istio_oci_loadbalancer_id
-      port             = port_iterator.value
+      backend_set_name = "${var.label_prefix}-ic-${load_balancers.value["port"]}"
+      load_balancer_id = load_balancers.value["loadbalancer"]
+      port             = load_balancers.value["port"]
       vnic_selection   = "PrimaryVnic"
     }
   }
