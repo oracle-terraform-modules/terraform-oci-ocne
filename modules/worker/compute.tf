@@ -62,7 +62,7 @@ resource "oci_core_instance_pool" "worker" {
   dynamic "load_balancers" {
 
     iterator = port_iterator
-    for_each = local.ingress_ports
+    for_each = local.nginx_ingress_ports
 
     content {
       backend_set_name = "${var.label_prefix}-ic-${port_iterator.value}"
