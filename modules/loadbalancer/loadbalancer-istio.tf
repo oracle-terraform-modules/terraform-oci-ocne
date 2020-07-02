@@ -16,7 +16,9 @@ resource "oci_load_balancer_backend_set" "istio_ingress_controller" {
   name             = "${var.label_prefix}-ic-${local.istio_ingress_ports[count.index]}"
 
   health_checker {
-    protocol = "TCP"
+    interval_ms  = 10000
+    protocol     = "TCP"
+    port         = 31380
   }
 
   policy = "ROUND_ROBIN"
