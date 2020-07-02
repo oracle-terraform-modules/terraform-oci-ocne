@@ -8,3 +8,11 @@ output "pub_lb_id" {
 output "pub_lb_ip" {
   value = oci_load_balancer_load_balancer.pub_lb.ip_address_details[0].ip_address
 }
+
+output "istio_lb_id" {
+  value = oci_load_balancer_load_balancer.istio_lb.id
+}
+
+output "istio_lb_ip" {
+  value = oci_load_balancer_load_balancer.istio_lb.ip_address_details[0].ip_address
+}

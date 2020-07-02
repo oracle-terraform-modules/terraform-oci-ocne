@@ -71,6 +71,18 @@ resource "oci_core_instance_pool" "worker" {
       vnic_selection   = "PrimaryVnic"
     }
   }
+  dynamic "load_balancers" {
+
+    iterator = port_iterator
+    for_each = local.istio_ingress_ports
+
+    content {
+      backend_set_name = "${var.label_prefix}-ic-${port_iterator.value}"
+      load_balancer_id = var.istio_oci_loadbalancer_id
+      port             = port_iterator.value
+      vnic_selection   = "PrimaryVnic"
+    }
+  }
 
   lifecycle {
     ignore_changes = [display_name]

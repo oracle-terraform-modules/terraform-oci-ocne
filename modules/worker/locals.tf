@@ -25,4 +25,5 @@ locals {
   ]
 
   nginx_ingress_ports = [30080, 30443]
+  istio_ingress_ports = [31380, 31390]
 }

@@ -90,6 +90,7 @@ module "worker" {
 
   # olcne public load balancer to attach to worker pool
   nginx_oci_loadbalancer_id = module.loadbalancer.pub_lb_id
+  istio_oci_loadbalancer_id = module.loadbalancer.istio_lb_id
 }
 
 module "loadbalancer" {
