@@ -100,3 +100,9 @@ variable "container_registry_urls" {
   }
   type = map(string)
 }
+
+variable "deploy_nginx_software" {
+  description = "If true, deploy nginx Ingress"
+  type        = bool
+  default     = true
+}

@@ -17,6 +17,7 @@ data "template_file" "nginx_patch" {
 }
 
 resource null_resource "install_nginxcontroller" {
+  count = var.deploy_nginx_software ? 1 : 0
 
   connection {
     host        = local.operator_private_ip
