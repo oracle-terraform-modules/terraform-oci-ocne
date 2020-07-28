@@ -402,7 +402,7 @@ variable "tags" {
 }
 
 variable "deploy_nginx_software" {
-  description = "If true, deploy nginx Ingress"
+  description = "If true, deploy NGINX Ingress"
   type        = bool
   default     = true
 }
