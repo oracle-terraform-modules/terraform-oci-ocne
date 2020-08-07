@@ -102,7 +102,5 @@ variable "container_registry_urls" {
 }
 
 variable "deploy_nginx_software" {
-  description = "If true, deploy NGINX Ingress"
   type        = bool
-  default     = true
 }
