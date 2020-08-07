@@ -17,5 +17,5 @@ output "ssh_to_master" {
 }
 
 output "loadbalancer_addresses" {
-  value = "NGINX Loadbalancer: ${module.loadbalancer.pub_lb_ip} || Istio Loadbalancer: ${module.loadbalancer.istio_lb_ip}"
+  value = "NGINX Loadbalancer: ${module.loadbalancer.nginx_lb_ip} || Istio Loadbalancer: ${module.loadbalancer.istio_lb_ip}"
 }
