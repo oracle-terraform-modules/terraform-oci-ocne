@@ -148,4 +148,5 @@ module "olcne" {
   helm_version = var.helm_version
 
   loadbalancer_ip_address = module.loadbalancer.pub_lb_ip
+  deploy_nginx_software = var.deploy_nginx_software
 }

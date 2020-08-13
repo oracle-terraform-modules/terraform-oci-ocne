@@ -400,3 +400,9 @@ variable "tags" {
   description = "Tags to apply to different resources."
   type        = map(any)
 }
+
+variable "deploy_nginx_software" {
+  description = "If true, deploy NGINX Ingress"
+  type        = bool
+  default     = true
+}
