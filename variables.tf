@@ -51,6 +51,11 @@ variable "ssh_public_key_path" {
   type        = string
 }
 
+variable "ssh_public_key" {
+  description = "ssh public key"
+  type        = string
+}
+
 # networking parameters
 
 variable "netnum" {
