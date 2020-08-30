@@ -3,7 +3,7 @@
 
 output "ssh_to_bastion" {
   description = "ssh to bastion"
-  value       = "ssh -i ${var.ssh_private_key_path} -J opc@${module.base.bastion_public_ip}"
+  value       = "ssh -i ${var.ssh_private_key_path} opc@${module.base.bastion_public_ip}"
 }
 
 output "ssh_to_operator" {
