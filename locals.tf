@@ -5,6 +5,7 @@ locals {
 
   oci_base_general = {
     compartment_id = var.compartment_id
+    root_compartment_id = var.tenancy_id
     label_prefix   = var.label_prefix
   }
 
@@ -46,6 +47,7 @@ locals {
     notification_topic    = var.bastion_notification_topic
     ssh_private_key_path  = var.ssh_private_key_path
     ssh_public_key_path   = var.ssh_public_key_path
+    ssh_public_key        = var.ssh_public_key
     tags                  = var.tags["bastion"]
     timezone              = var.bastion_timezone
   }
@@ -65,6 +67,7 @@ locals {
     notification_topic        = var.operator_notification_topic
     ssh_private_key_path      = var.ssh_private_key_path
     ssh_public_key_path       = var.ssh_public_key_path
+    ssh_public_key            = var.ssh_public_key
     tags                      = var.tags["bastion"]
     timezone                  = var.operator_timezone
   }

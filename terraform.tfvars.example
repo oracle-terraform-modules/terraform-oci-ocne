@@ -19,6 +19,8 @@ ssh_private_key_path = "/path/to/ssh_private_key"
 
 ssh_public_key_path = "/path/to/ssh_public_key"
 
+ssh_public_key = ""
+
 # general oci parameters
 label_prefix = "dev"
 
