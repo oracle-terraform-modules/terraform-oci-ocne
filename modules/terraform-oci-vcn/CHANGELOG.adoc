@@ -1,0 +1,33 @@
+= CHANGELOG
+:idprefix:
+:idseparator: *
+
+:uri-changelog: http://keepachangelog.com/
+All notable changes to this project are documented in this file.
+
+The format is based on {uri-changelog}[Keep a Changelog].
+
+== v1.0.3 (July 13,2020)
+
+=== Changes
+* Made prefix is optional (#5)
+* Added schema for Resource Manager ( #3)
+
+== v1.0.2 (May 21,2020)
+
+=== Changes
+* Removed unnecessary variables (#2)
+* Updated docs on how to use this module from HashiCorp registry
+
+== v1.0.1 (May 27,2020)
+
+=== Changes
+* Renamed freeform_tags to tags
+
+== v1.0.0 (May 21,2020)
+
+=== Changes
+* First release after split from terraform-oci-base
+* changed most variables to simple types
+* internet gateway now optional
+* updated docs
