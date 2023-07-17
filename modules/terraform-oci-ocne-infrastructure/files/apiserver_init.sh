@@ -10,7 +10,7 @@ function getPackageSuffix() {
     fi
     if [[ $(echo $${packageSuffix} | awk -F'-' '{print NF}') -gt 1 ]]; then
       if [[ "$${packageSuffix}" != *".el7" ]] && [[ "$${packageSuffix}" != *".el8" ]] && [[ "$${packageSuffix}" != *".el9" ]] ; then
-	      if [[ $(cat /etc/oracle-release) == "Oracle Linux Server release 9."* ]]; then
+        if [[ $(cat /etc/oracle-release) == "Oracle Linux Server release 9."* ]]; then
           packageSuffix="$${packageSuffix}.el9"
         elif [[ $(cat /etc/oracle-release) == "Oracle Linux Server release 8."* ]]; then
           packageSuffix="$${packageSuffix}.el8"
@@ -31,10 +31,10 @@ if [[ ${os_version} > 8.9 ]]; then
   fi
   dnf install -y oracle-olcne-release-el9
   dnf config-manager --disable ol9_olcne*
-  dnf config-manager --enable ol9_olcne${ocne_short_version} ol9_addons ol9_baseos_latest ${kernel_version}
+  dnf config-manager --enable ol9_olcne${ocne_short_version} ol9_addons ol9_baseos_latest
   packageSuffix=$(getPackageSuffix)
   dnf install -y olcnectl$${packageSuffix}
-elif [[ ${os_version} > 7.9 ]]; then
+elif [[ ${os_version} > 7.9 && ${os_version} < 9 ]]; then
   if [[ ${yum_repo_url} != *"yum.oracle.com"* ]]; then
     dnf config-manager --add-repo ${yum_repo_url}
   fi
