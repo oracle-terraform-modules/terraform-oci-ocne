@@ -100,7 +100,7 @@ output "os_version" {
 
 output "subnet_id" {
   description = "The OCID of a pre-existing subnet that all newly created cloud resources will be configured to use.  If this output to set to the empty string, a network configuration will be generated automatically"
-  value       = var.deploy_networking ? module.oci-ocne-vcn[0].private_subnet_id.*.id[0] : var.subnet_id
+  value       = var.deploy_networking ? module.oci-ocne-network[0].private_subnet_id.*.id[0] : var.subnet_id
 }
 
 // Compute instance specific outputs
@@ -198,7 +198,7 @@ output "extra_cas" {
 // Networking outputs
 output "vcn_id" {
   description = "The OCID of the OCI Virtual Cloud Network in which to create any subnets that might be generated as part of this deployment"
-  value       = var.deploy_networking ? module.oci-ocne-vcn[0].vcn_id : var.vcn_id
+  value       = var.deploy_networking ? module.oci-ocne-network[0].vcn_id : var.vcn_id
 }
 
 // Vault outputs
@@ -232,7 +232,7 @@ output "bastion_private_key_path" {
 }
 
 output "bastion_public_ip" {
-  value = var.enable_bastion ? module.oci-ocne-vcn[0].bastion_public_ip : var.bastion_public_ip
+  value = var.enable_bastion ? module.oci-ocne-network[0].bastion_public_ip : var.bastion_public_ip
 }
 
 output "bastion_user" {

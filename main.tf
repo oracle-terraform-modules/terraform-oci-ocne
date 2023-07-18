@@ -38,8 +38,8 @@ resource "null_resource" "ocne_config_validation" {
   }
 }
 
-module "oci-ocne-vcn" {
-  source     = "./modules/oci-ocne-vcn"
+module "oci-ocne-network" {
+  source     = "./modules/oci-ocne-network"
   count      = (var.deploy_networking && var.enable_bastion) || var.enable_bastion ? 1 : 0
 
   tenancy_id           = var.tenancy_id
@@ -65,7 +65,7 @@ module "infrastructure" {
   availability_domain_id   = var.availability_domain_id
   compartment_id           = var.compartment_id
   prefix                   = var.prefix
-  subnet_id                = var.deploy_networking ? module.oci-ocne-vcn[0].private_subnet_id.*.id[0] : var.subnet_id
+  subnet_id                = var.deploy_networking ? module.oci-ocne-network[0].private_subnet_id.*.id[0] : var.subnet_id
   instance_shape           = var.instance_shape
   image_ocid               = var.image_ocid
   os_version               = var.os_version
@@ -79,7 +79,7 @@ module "infrastructure" {
   yum_repo_url             = var.yum_repo_url
   ocne_version             = data.external.ocne_config.result.version
   enable_bastion          = var.enable_bastion
-  bastion_public_ip        = var.enable_bastion ? module.oci-ocne-vcn[0].bastion_public_ip : var.bastion_public_ip
+  bastion_public_ip        = var.enable_bastion ? module.oci-ocne-network[0].bastion_public_ip : var.bastion_public_ip
   bastion_user             = var.bastion_user
   bastion_private_key_path = var.enable_bastion || var.bastion_public_ip != "" ? var.bastion_private_key_path : ""
   compute_user             = var.compute_user
@@ -101,7 +101,7 @@ module "vault" {
   availability_domain_id   = var.availability_domain_id
   compartment_id           = var.compartment_id
   prefix                   = "${var.prefix}-vault"
-  subnet_id                = var.deploy_networking ? module.oci-ocne-vcn[0].private_subnet_id.*.id[0] : var.subnet_id
+  subnet_id                = var.deploy_networking ? module.oci-ocne-network[0].private_subnet_id.*.id[0] : var.subnet_id
   instance_shape           = var.instance_shape
   ssh_public_key_path      = var.ssh_public_key_path
   ssh_private_key_path     = var.ssh_private_key_path
@@ -118,7 +118,7 @@ module "vault" {
   ocne_secret_name        = local.ocne_secret_name
   load_balancer_shape      = var.load_balancer_shape
   enable_bastion          = var.enable_bastion
-  bastion_public_ip        = var.enable_bastion ? module.oci-ocne-vcn[0].bastion_public_ip : var.bastion_public_ip
+  bastion_public_ip        = var.enable_bastion ? module.oci-ocne-network[0].bastion_public_ip : var.bastion_public_ip
   bastion_user             = var.bastion_user
   bastion_private_key_path = var.enable_bastion || var.bastion_public_ip != "" ? var.bastion_private_key_path : ""
   compute_user             = var.compute_user
@@ -151,7 +151,7 @@ module "ocne-provision" {
   container_registry        = var.container_registry
   certificate_signing_token = var.use_vault ? module.vault[0].vault_ocne_client_token : ""
   enable_bastion           = var.enable_bastion
-  bastion_public_ip         = var.enable_bastion ? module.oci-ocne-vcn[0].bastion_public_ip : var.bastion_public_ip
+  bastion_public_ip         = var.enable_bastion ? module.oci-ocne-network[0].bastion_public_ip : var.bastion_public_ip
   bastion_user              = var.bastion_user
   bastion_private_key_path  = var.enable_bastion || var.bastion_public_ip != "" ? var.bastion_private_key_path : ""
   node_ocids                = module.infrastructure.node_ocids

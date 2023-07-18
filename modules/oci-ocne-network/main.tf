@@ -3,24 +3,21 @@
 
 # Modules and Resources
 module "vcn" {
-  source = "../terraform-oci-vcn"
+  source  = "oracle-terraform-modules/vcn/oci"
+  version = "3.5.4"
   count  = var.deploy_networking ? 1 : 0
 
   # Required
   compartment_id    = var.compartment_id
+
+  # Optional
   region            = var.region
   vcn_name          = "${var.prefix}-vcn"
   vcn_dns_label     = var.vcn_dns_label
-  ig_route_id       = var.ig_route_id
-  nat_route_id      = var.nat_route_id
-  deploy_networking = var.deploy_networking
-
-  # Optional
-  internet_gateway_enabled = true
-  # Commented out for my free tier account.
-  nat_gateway_enabled = true
-  #service_gateway_enabled  = true
-  vcn_cidr = var.vnc_cidr_block
+  create_internet_gateway = true
+  create_nat_gateway = true
+  create_service_gateway = false
+  vcn_cidrs = [var.vnc_cidr_block]
   freeform_tags = var.freeform_tags
 }
 
