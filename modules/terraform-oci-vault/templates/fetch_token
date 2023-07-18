@@ -13,13 +13,13 @@ parse_input() {
         bastion_user=\(.bastion_user)
         bastion_public_ip=\(.bastion_public_ip)
         bastion_private_key_path=\(.bastion_private_key_path)
-        bastion_enabled=\(.bastion_enabled)"')"
+        enable_bastion=\(.enable_bastion)"')"
 }
 
 fetch_token() {
-  if [[ $bastion_enabled} == true || "${bastion_public_ip}" != "" ]] ; then
+  if [[ ${enable_bastion} == true || "${bastion_public_ip}" != "" ]] ; then
     vault_ocne_client_token=$(ssh -i ${ssh_private_key_path} -o StrictHostKeyChecking=no -o ProxyCommand="ssh -i ${bastion_private_key_path} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $bastion_user@${bastion_public_ip} nc $vault_host 22" $compute_user@$vault_host 'export OCI_CLI_SUPPRESS_FILE_PERMISSIONS_WARNING=True && oci vault secret list --compartment-id '$compartment_id' --name '$ocne_secret_name' | jq -r '"'"'.data[].id'"'"' | xargs -I{} oci secrets secret-bundle get --secret-id {} --stage CURRENT --region '$region' | jq -r '"'"'.data."secret-bundle-content".content'"'"' | base64 -d' | tr -d '')
-  elif [[ ${bastion_enabled} == false && "${bastion_public_ip}" == "" ]] ; then
+  elif [[ ${enable_bastion} == false && "${bastion_public_ip}" == "" ]] ; then
     vault_ocne_client_token=$(ssh -i ${ssh_private_key_path} -o StrictHostKeyChecking=no $compute_user@$vault_host 'export OCI_CLI_SUPPRESS_FILE_PERMISSIONS_WARNING=True && oci vault secret list --compartment-id '$compartment_id' --name '$ocne_secret_name' | jq -r '"'"'.data[].id'"'"' | xargs -I{} oci secrets secret-bundle get --secret-id {} --stage CURRENT --region '$region' | jq -r '"'"'.data."secret-bundle-content".content'"'"' | base64 -d' | tr -d '')
   fi
 

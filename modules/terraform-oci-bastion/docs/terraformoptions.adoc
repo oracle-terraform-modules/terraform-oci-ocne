@@ -128,7 +128,7 @@ Ensure you review the {uri-terraform-dependencies}[dependencies].
 |Values
 |Default
 
-|`bastion_enabled`
+|`enable_bastion`
 |whether to create the bastion
 | true/false
 |true
@@ -185,13 +185,13 @@ Ensure you review the {uri-terraform-dependencies}[dependencies].
 |Values
 |Default
 
-|`notification_enabled`
+|`enable_notification`
 |Whether to enable ONS notification for the bastion host.
 |true/false
 |false
 
 |`notification_endpoint`
-|The subscription notification endpoint. Email address to be notified. *Required if notification_enabled = true* ..
+|The subscription notification endpoint. Email address to be notified. *Required if enable_notification = true* ..
 |
 |Autonomous
 

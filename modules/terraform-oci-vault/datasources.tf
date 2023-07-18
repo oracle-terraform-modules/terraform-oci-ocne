@@ -81,6 +81,6 @@ data "external" "fetch_token" {
     bastion_user             = var.bastion_user
     bastion_public_ip        = var.bastion_public_ip
     bastion_private_key_path = var.bastion_private_key_path
-    bastion_enabled          = var.bastion_enabled
+    enable_bastion          = var.enable_bastion
   }
 }

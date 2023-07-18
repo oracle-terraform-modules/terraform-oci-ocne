@@ -135,7 +135,7 @@ variable "certificate_signing_token" {
   description = "The Hashicorp Vault token that OCNE Agents and OCNE API Servers should use to authenticate with Vault"
 }
 
-variable "bastion_enabled" {
+variable "enable_bastion" {
   type        = bool
   description = "Decides if bastion is installed.  Intended for internal use.  Set to false."
 }

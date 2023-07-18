@@ -6,7 +6,7 @@ resource "null_resource" "delete_vault_storage_backend_bucket" {
     vault_primary_node   = element(module.vault-autoscaler.instances, 0)
     bastion_public_ip    = var.bastion_public_ip
     bastion_user         = var.bastion_user
-    bastion_private_key  = var.bastion_enabled || var.bastion_public_ip != "" ? file(var.bastion_private_key_path) : ""
+    bastion_private_key  = var.enable_bastion || var.bastion_public_ip != "" ? file(var.bastion_private_key_path) : ""
     compute_user         = var.compute_user
     ssh_private_key_path = var.ssh_private_key_path
     prefix               = var.prefix
@@ -101,7 +101,7 @@ resource "null_resource" "vault_setup" {
       private_key         = file(var.ssh_private_key_path)
       bastion_host        = var.bastion_public_ip
       bastion_user        = var.bastion_user
-      bastion_private_key = var.bastion_enabled || var.bastion_public_ip != "" ? file(var.bastion_private_key_path) : ""
+      bastion_private_key = var.enable_bastion || var.bastion_public_ip != "" ? file(var.bastion_private_key_path) : ""
     }
     inline = [
       "set -x",

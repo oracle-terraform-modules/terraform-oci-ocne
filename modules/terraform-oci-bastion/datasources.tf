@@ -30,8 +30,8 @@ data "template_file" "autonomous_template" {
   template = file("${path.module}/scripts/notification.template.sh")
 
   vars = {
-    notification_enabled = var.notification_enabled
-    topic_id             = var.notification_enabled == true ? oci_ons_notification_topic.bastion_notification[0].topic_id : "null"
+    enable_notification = var.enable_notification
+    topic_id             = var.enable_notification == true ? oci_ons_notification_topic.bastion_notification[0].topic_id : "null"
   }
 
   count = var.bastion_image_id == "Autonomous" ? 1 : 0
@@ -89,5 +89,5 @@ data "oci_core_instance" "bastion" {
 data "oci_ons_notification_topic" "bastion_notification" {
   topic_id = oci_ons_notification_topic.bastion_notification[0].topic_id
 
-  count = var.notification_enabled ? 1 : 0
+  count = var.enable_notification ? 1 : 0
 }

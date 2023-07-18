@@ -14,7 +14,7 @@ resource "null_resource" "ocne_provision_oci_key" {
     private_key         = file(var.ssh_private_key_path)
     bastion_host        = var.bastion_public_ip
     bastion_user        = var.bastion_user
-    bastion_private_key = var.bastion_enabled ? file(var.bastion_private_key_path) : ""
+    bastion_private_key = var.enable_bastion ? file(var.bastion_private_key_path) : ""
   }
   count = var.oci_api_key_path == "" ? 0 : 1
   provisioner "file" {
@@ -32,7 +32,7 @@ resource "null_resource" "ocne_provision_kubevirt_cfg" {
     private_key         = file(var.ssh_private_key_path)
     bastion_host        = var.bastion_public_ip
     bastion_user        = var.bastion_user
-    bastion_private_key = var.bastion_enabled ? file(var.bastion_private_key_path) : ""
+    bastion_private_key = var.enable_bastion ? file(var.bastion_private_key_path) : ""
   }
   count = var.kubevirt_config == "" ? 0 : 1
   provisioner "file" {
@@ -51,7 +51,7 @@ resource "null_resource" "ocne_provision" {
     private_key         = file(var.ssh_private_key_path)
     bastion_host        = var.bastion_public_ip
     bastion_user        = var.bastion_user
-    bastion_private_key = var.bastion_enabled ? file(var.bastion_private_key_path) : ""
+    bastion_private_key = var.enable_bastion ? file(var.bastion_private_key_path) : ""
   }
 
   triggers = {
@@ -99,8 +99,8 @@ resource "null_resource" "fetch_kubeconfig" {
 
   provisioner "local-exec" {
     command = <<EOT
-			if [[ ${var.bastion_enabled} == true || "${var.bastion_public_ip}" != "" ]] ; then scp -r -i '${var.ssh_private_key_path}' -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ProxyCommand='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i '${var.bastion_private_key_path}' -W %h:%p ${var.bastion_user}@${var.bastion_public_ip}' ${var.compute_user}@${var.apiserver_ip}:/home/${var.compute_user}/kubeconfig.${var.environment_name}.${var.kubernetes_name} ${abspath("./kubeconfig")} ; fi
-			if [[ ${var.bastion_enabled} == false && "${var.bastion_public_ip}" == "" ]] ; then scp -r -i '${var.ssh_private_key_path}' -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${var.compute_user}@${var.apiserver_ip}:/home/${var.compute_user}/kubeconfig.${var.environment_name}.${var.kubernetes_name} ${abspath("./kubeconfig")} ; fi
+			if [[ ${var.enable_bastion} == true || "${var.bastion_public_ip}" != "" ]] ; then scp -r -i '${var.ssh_private_key_path}' -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ProxyCommand='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i '${var.bastion_private_key_path}' -W %h:%p ${var.bastion_user}@${var.bastion_public_ip}' ${var.compute_user}@${var.apiserver_ip}:/home/${var.compute_user}/kubeconfig.${var.environment_name}.${var.kubernetes_name} ${abspath("./kubeconfig")} ; fi
+			if [[ ${var.enable_bastion} == false && "${var.bastion_public_ip}" == "" ]] ; then scp -r -i '${var.ssh_private_key_path}' -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${var.compute_user}@${var.apiserver_ip}:/home/${var.compute_user}/kubeconfig.${var.environment_name}.${var.kubernetes_name} ${abspath("./kubeconfig")} ; fi
 			EOT
   }
 }

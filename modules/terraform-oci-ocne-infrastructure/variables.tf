@@ -129,7 +129,7 @@ variable "compute_user" {
 }
 
 // OCNE variables
-variable "bastion_enabled" {
+variable "enable_bastion" {
   type        = bool
   description = "Decides if bastion is installed.  Intended for internal use.  Set to false."
 }

@@ -123,7 +123,7 @@ variable "timezone" {
 
 # bastion notification
 
-variable "notification_enabled" {
+variable "enable_notification" {
   description = "Whether to enable ONS notification for the bastion host."
   type        = bool
 }

@@ -7,7 +7,7 @@ output "vcn_id" {
 }
 
 output "bastion_public_ip" {
-  value = var.bastion_enabled ? module.bastion[0].bastion_public_ip : ""
+  value = var.enable_bastion ? module.bastion[0].bastion_public_ip : ""
 }
 
 output "private_security_list_id" {

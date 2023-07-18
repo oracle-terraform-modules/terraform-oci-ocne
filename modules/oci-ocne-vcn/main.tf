@@ -26,7 +26,7 @@ module "vcn" {
 
 module "bastion" {
   source = "../terraform-oci-bastion"
-  count  = var.bastion_enabled ? 1 : 0
+  count  = var.enable_bastion ? 1 : 0
 
   tenancy_id           = var.tenancy_id
   compartment_id       = var.compartment_id
@@ -39,7 +39,7 @@ module "bastion" {
   ssh_public_key_path  = var.ssh_public_key_path
   user_id              = var.user_id
   availability_domain  = var.availability_domain
-  notification_enabled = var.notification_enabled
+  enable_notification = var.enable_notification
   freeform_tags        = var.freeform_tags
 }
 

@@ -65,7 +65,7 @@ variable "instance_count" {
   description = "The number of compute instances to create with the given configuration"
 }
 
-variable "bastion_enabled" {
+variable "enable_bastion" {
   type        = bool
   description = "Decides if bastion is installed.  Intended for internal use.  Set to false."
 }

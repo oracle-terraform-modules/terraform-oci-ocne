@@ -17,7 +17,7 @@ resource "oci_core_instance" "instance" {
     private_key         = file(var.ssh_private_key_path)
     bastion_host        = var.bastion_public_ip
     bastion_user        = var.bastion_user
-    bastion_private_key = var.bastion_enabled || var.bastion_public_ip != "" ? file(var.bastion_private_key_path) : ""
+    bastion_private_key = var.enable_bastion || var.bastion_public_ip != "" ? file(var.bastion_private_key_path) : ""
   }
 
   create_vnic_details {
@@ -78,7 +78,7 @@ resource "null_resource" "assign_vnics" {
       private_key         = file(var.ssh_private_key_path)
       bastion_host        = var.bastion_public_ip
       bastion_user        = var.bastion_user
-      bastion_private_key = var.bastion_enabled || var.bastion_public_ip != "" ? file(var.bastion_private_key_path) : ""
+      bastion_private_key = var.enable_bastion || var.bastion_public_ip != "" ? file(var.bastion_private_key_path) : ""
     }
     inline = [
       "set -x",

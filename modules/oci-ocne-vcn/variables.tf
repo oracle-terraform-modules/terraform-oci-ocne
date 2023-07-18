@@ -78,12 +78,12 @@ variable "deploy_networking" {
   description = "Decides if VCN is installed."
 }
 
-variable "bastion_enabled" {
+variable "enable_bastion" {
   type        = bool
   description = "Decides if bastion is installed.  Intended for internal use.  Set to false."
 }
 
-variable "notification_enabled" {
+variable "enable_notification" {
   description = "Whether to enable ONS notification for the bastion host."
   default     = false
   type        = bool

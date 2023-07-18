@@ -232,7 +232,7 @@ output "bastion_private_key_path" {
 }
 
 output "bastion_public_ip" {
-  value = var.bastion_enabled ? module.oci-ocne-vcn[0].bastion_public_ip : var.bastion_public_ip
+  value = var.enable_bastion ? module.oci-ocne-vcn[0].bastion_public_ip : var.bastion_public_ip
 }
 
 output "bastion_user" {

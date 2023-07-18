@@ -261,7 +261,7 @@ variable "ocne_secret_name" {
   default     = "ocne_keys"
 }
 
-variable "bastion_enabled" {
+variable "enable_bastion" {
   type        = bool
   description = "Decides if bastion is installed.  Intended for internal use.  Set to false."
   default     = true
@@ -281,11 +281,11 @@ variable "bastion_user" {
 
 variable "bastion_private_key_path" {
   type        = string
-  description = "The SSH private key path that goes with the SSH public key that is used when accessing the bastion host. Must be set if bastion_enabled is set to true."
+  description = "The SSH private key path that goes with the SSH public key that is used when accessing the bastion host. Must be set if enable_bastion is set to true."
   default     = ""
 }
 
-variable "notification_enabled" {
+variable "enable_notification" {
   description = "Whether to enable ONS notification for the bastion host."
   default     = false
   type        = bool

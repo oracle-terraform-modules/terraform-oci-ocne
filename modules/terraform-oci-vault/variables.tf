@@ -153,7 +153,7 @@ variable "ocne_secret_name" {
   description = "The name of the ocne vault secret"
 }
 
-variable "bastion_enabled" {
+variable "enable_bastion" {
   type        = bool
   description = "Decides if bastion is installed.  Intended for internal use.  Set to false."
 }
@@ -171,7 +171,7 @@ variable "bastion_user" {
 
 variable "bastion_private_key_path" {
   type        = string
-  description = "The SSH private key path that goes with the SSH public key that is used when accessing the bastion host. Must be set to true if bastion_enabled is set to true."
+  description = "The SSH private key path that goes with the SSH public key that is used when accessing the bastion host. Must be set to true if enable_bastion is set to true."
 }
 
 variable "freeform_tags" {

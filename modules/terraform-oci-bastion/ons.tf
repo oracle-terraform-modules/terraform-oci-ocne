@@ -5,7 +5,7 @@ resource "oci_ons_notification_topic" "bastion_notification" {
   compartment_id = var.compartment_id
   name           = var.prefix == "none" ? var.notification_topic : "${var.prefix}-${var.notification_topic}"
 
-  count = var.notification_enabled ? 1 : 0
+  count = var.enable_notification ? 1 : 0
 
   freeform_tags = var.freeform_tags
 }
@@ -16,7 +16,7 @@ resource "oci_ons_subscription" "bastion_notification" {
   protocol       = var.notification_protocol
   topic_id       = oci_ons_notification_topic.bastion_notification[0].topic_id
 
-  count = var.notification_enabled ? 1 : 0
+  count = var.enable_notification ? 1 : 0
 
   freeform_tags  = var.freeform_tags
 }
@@ -28,7 +28,7 @@ resource "oci_identity_dynamic_group" "bastion_notification" {
   matching_rule  = "ALL {instance.id = '${join(",", data.oci_core_instance.bastion.*.id)}'}"
   name           = var.prefix == "none" ? "bastion-notification" : "${var.prefix}-bastion-notification"
 
-  count = var.notification_enabled ? 1 : 0
+  count = var.enable_notification ? 1 : 0
 
   freeform_tags  = var.freeform_tags
 }
@@ -40,7 +40,7 @@ resource "oci_identity_policy" "bastion_notification" {
   name           = var.prefix == "none" ? "bastion-notification" : "${var.prefix}-bastion-notification"
   statements     = ["Allow dynamic-group ${oci_identity_dynamic_group.bastion_notification[0].name} to use ons-topic in compartment id ${var.compartment_id} where request.permission='ONS_TOPIC_PUBLISH'"]
 
-  count = var.notification_enabled ? 1 : 0
+  count = var.enable_notification ? 1 : 0
 
   freeform_tags  = var.freeform_tags
 }

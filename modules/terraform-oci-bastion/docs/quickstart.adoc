@@ -82,7 +82,7 @@ provider "oci" {
 
 * `bastion_shape`
 * `bastion_upgrade`
-* `notification_enabled`
+* `enable_notification`
 * `notification_endpoint`
 
 . Run Terraform:

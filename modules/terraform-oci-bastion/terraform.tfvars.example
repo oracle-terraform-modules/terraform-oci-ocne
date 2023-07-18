@@ -33,7 +33,7 @@ newbits = 13
 
 vcn_id = ""
 
-bastion_enabled = true
+enable_bastion = true
 
 bastion_image_id = "Autonomous"
 
@@ -53,7 +53,7 @@ ssh_public_key_path = ""
 
 # notification
 
-notification_enabled = false
+enable_notification = false
 
 notification_endpoint = ""
 

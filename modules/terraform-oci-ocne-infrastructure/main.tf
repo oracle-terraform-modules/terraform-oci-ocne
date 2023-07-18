@@ -39,7 +39,7 @@ module "api-server-compute" {
   instance_shape           = var.instance_shape
   ssh_public_key_path      = var.ssh_public_key_path
   ssh_private_key_path     = var.ssh_private_key_path
-  bastion_enabled          = var.bastion_enabled
+  enable_bastion          = var.enable_bastion
   bastion_public_ip        = var.bastion_public_ip
   bastion_user             = var.bastion_user
   bastion_private_key_path = var.bastion_private_key_path
@@ -60,7 +60,7 @@ module "control-plane-compute" {
   instance_shape           = var.instance_shape
   ssh_public_key_path      = var.ssh_public_key_path
   ssh_private_key_path     = var.ssh_private_key_path
-  bastion_enabled          = var.bastion_enabled
+  enable_bastion          = var.enable_bastion
   bastion_public_ip        = var.bastion_public_ip
   bastion_user             = var.bastion_user
   bastion_private_key_path = var.bastion_private_key_path
@@ -83,7 +83,7 @@ module "worker-compute" {
   instance_shape           = var.instance_shape
   ssh_public_key_path      = var.ssh_public_key_path
   ssh_private_key_path     = var.ssh_private_key_path
-  bastion_enabled          = var.bastion_enabled
+  enable_bastion          = var.enable_bastion
   bastion_public_ip        = var.bastion_public_ip
   bastion_user             = var.bastion_user
   bastion_private_key_path = var.bastion_private_key_path
@@ -102,12 +102,12 @@ resource "null_resource" "copy_apiserver_ssh_key" {
 
   provisioner "local-exec" {
     command = <<EOF
-                        if [[ ${var.bastion_enabled} == true || "${var.bastion_public_ip}" != "" ]] ; then
+                        if [[ ${var.enable_bastion} == true || "${var.bastion_public_ip}" != "" ]] ; then
                                 apiserver_ssh_key=$(ssh -i ${var.ssh_private_key_path} -o StrictHostKeyChecking=no -o ProxyCommand="ssh -i ${var.bastion_private_key_path} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -W %h:%p ${var.bastion_user}@${var.bastion_public_ip}" ${var.compute_user}@${local.apiserver_ip} cat /home/${var.compute_user}/.ssh/id_rsa.pub) && \
                                 ssh -i ${var.ssh_private_key_path} -o StrictHostKeyChecking=no -o ProxyCommand="ssh -i ${var.bastion_private_key_path} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -W %h:%p ${var.bastion_user}@${var.bastion_public_ip}" ${var.compute_user}@${local.agents[count.index]} 'echo '$apiserver_ssh_key' | tee -a /home/${var.compute_user}/.ssh/authorized_keys'
                         fi
 
-                        if [[ ${var.bastion_enabled} == false && "${var.bastion_public_ip}" == "" ]] ; then
+                        if [[ ${var.enable_bastion} == false && "${var.bastion_public_ip}" == "" ]] ; then
                                 apiserver_ssh_key=$(ssh -i ${var.ssh_private_key_path} -o StrictHostKeyChecking=no ${var.compute_user}@${local.apiserver_ip} cat /home/${var.compute_user}/.ssh/id_rsa.pub) && \
                                 ssh -i ${var.ssh_private_key_path} -o StrictHostKeyChecking=no ${var.compute_user}@${local.agents[count.index]} 'echo '$apiserver_ssh_key' | tee -a /home/${var.compute_user}/.ssh/authorized_keys'
                         fi
@@ -130,7 +130,7 @@ resource "null_resource" "update_kernel" {
     private_key         = file(var.ssh_private_key_path)
     bastion_host        = var.bastion_public_ip
     bastion_user        = var.bastion_user
-    bastion_private_key = var.bastion_enabled || var.bastion_public_ip != "" ? file(var.bastion_private_key_path) : ""
+    bastion_private_key = var.enable_bastion || var.bastion_public_ip != "" ? file(var.bastion_private_key_path) : ""
   }
 
   provisioner "remote-exec" {
@@ -141,7 +141,7 @@ resource "null_resource" "update_kernel" {
 
   provisioner "local-exec" {
     command = <<EOF
-                        if [[ ${var.bastion_enabled} == true || "${var.bastion_public_ip}" != "" ]] ; then
+                        if [[ ${var.enable_bastion} == true || "${var.bastion_public_ip}" != "" ]] ; then
                                 ssh -i ${var.ssh_private_key_path} -o StrictHostKeyChecking=no -o ProxyCommand="ssh -i ${var.bastion_private_key_path} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -W %h:%p ${var.bastion_user}@${var.bastion_public_ip}" ${var.compute_user}@${local.all_nodes[count.index]} \
 				'sudo dnf install -y kernel-uek && \
 				(sleep 2 && \
@@ -153,7 +153,7 @@ resource "null_resource" "update_kernel" {
 				rm -f RPM'
                         fi
 
-                        if [[ ${var.bastion_enabled} == false && "${var.bastion_public_ip}" == "" ]] ; then
+                        if [[ ${var.enable_bastion} == false && "${var.bastion_public_ip}" == "" ]] ; then
                                 ssh -i ${var.ssh_private_key_path} -o StrictHostKeyChecking=no ${var.compute_user}@${local.all_nodes[count.index]} \
 				'rpm -qa | grep uek > RPM && \
 				sudo dnf install -y kernel-uek && \

@@ -8,12 +8,12 @@ resource "null_resource" "variable_validation" {
       error_message   = "Invalid provision mode: ${var.provision_mode}. Valid provision modes are: ${join(", ",local.provision_modes_values_list)}"
     }
     postcondition {
-      condition       = (!var.deploy_networking || var.bastion_enabled)
-      error_message   = "bastion_enabled must be true if deploy_networking is true"
+      condition       = (!var.deploy_networking || var.enable_bastion)
+      error_message   = "enable_bastion must be true if deploy_networking is true"
     }
     postcondition {
-      condition       = (!var.bastion_enabled || (var.bastion_enabled && var.bastion_private_key_path != ""))
-      error_message   = "bastion_private_key_path must be set if bastion_enabled is true"
+      condition       = (!var.enable_bastion || (var.enable_bastion && var.bastion_private_key_path != ""))
+      error_message   = "bastion_private_key_path must be set if enable_bastion is true"
     }
   }
 }
@@ -40,7 +40,7 @@ resource "null_resource" "ocne_config_validation" {
 
 module "oci-ocne-vcn" {
   source     = "./modules/oci-ocne-vcn"
-  count      = (var.deploy_networking && var.bastion_enabled) || var.bastion_enabled ? 1 : 0
+  count      = (var.deploy_networking && var.enable_bastion) || var.enable_bastion ? 1 : 0
 
   tenancy_id           = var.tenancy_id
   compartment_id       = var.compartment_id
@@ -51,7 +51,7 @@ module "oci-ocne-vcn" {
   user_id              = var.user_id
   prefix               = var.prefix
   deploy_networking    = var.deploy_networking
-  bastion_enabled      = var.bastion_enabled
+  enable_bastion      = var.enable_bastion
   vcn_id               = var.vcn_id
   ig_route_id          = var.ig_route_id
   nat_route_id         = var.nat_route_id
@@ -78,10 +78,10 @@ module "infrastructure" {
   standalone_api_server    = var.standalone_api_server
   yum_repo_url             = var.yum_repo_url
   ocne_version             = data.external.ocne_config.result.version
-  bastion_enabled          = var.bastion_enabled
-  bastion_public_ip        = var.bastion_enabled ? module.oci-ocne-vcn[0].bastion_public_ip : var.bastion_public_ip
+  enable_bastion          = var.enable_bastion
+  bastion_public_ip        = var.enable_bastion ? module.oci-ocne-vcn[0].bastion_public_ip : var.bastion_public_ip
   bastion_user             = var.bastion_user
-  bastion_private_key_path = var.bastion_enabled || var.bastion_public_ip != "" ? var.bastion_private_key_path : ""
+  bastion_private_key_path = var.enable_bastion || var.bastion_public_ip != "" ? var.bastion_private_key_path : ""
   compute_user             = var.compute_user
   freeform_tags            = var.freeform_tags
   virtual_ip               = var.virtual_ip
@@ -117,10 +117,10 @@ module "vault" {
   secret_name              = local.secret_name
   ocne_secret_name        = local.ocne_secret_name
   load_balancer_shape      = var.load_balancer_shape
-  bastion_enabled          = var.bastion_enabled
-  bastion_public_ip        = var.bastion_enabled ? module.oci-ocne-vcn[0].bastion_public_ip : var.bastion_public_ip
+  enable_bastion          = var.enable_bastion
+  bastion_public_ip        = var.enable_bastion ? module.oci-ocne-vcn[0].bastion_public_ip : var.bastion_public_ip
   bastion_user             = var.bastion_user
-  bastion_private_key_path = var.bastion_enabled || var.bastion_public_ip != "" ? var.bastion_private_key_path : ""
+  bastion_private_key_path = var.enable_bastion || var.bastion_public_ip != "" ? var.bastion_private_key_path : ""
   compute_user             = var.compute_user
   freeform_tags            = var.freeform_tags
 }
@@ -150,10 +150,10 @@ module "ocne-provision" {
   virtual_ip                = var.virtual_ip
   container_registry        = var.container_registry
   certificate_signing_token = var.use_vault ? module.vault[0].vault_ocne_client_token : ""
-  bastion_enabled           = var.bastion_enabled
-  bastion_public_ip         = var.bastion_enabled ? module.oci-ocne-vcn[0].bastion_public_ip : var.bastion_public_ip
+  enable_bastion           = var.enable_bastion
+  bastion_public_ip         = var.enable_bastion ? module.oci-ocne-vcn[0].bastion_public_ip : var.bastion_public_ip
   bastion_user              = var.bastion_user
-  bastion_private_key_path  = var.bastion_enabled || var.bastion_public_ip != "" ? var.bastion_private_key_path : ""
+  bastion_private_key_path  = var.enable_bastion || var.bastion_public_ip != "" ? var.bastion_private_key_path : ""
   node_ocids                = module.infrastructure.node_ocids
   availability_domain_id    = var.availability_domain_id
   compute_user              = var.compute_user
