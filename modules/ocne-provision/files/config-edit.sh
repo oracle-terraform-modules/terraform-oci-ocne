@@ -129,7 +129,7 @@ defArg kubernetes "container-registry" ${containerRegistry}
 list=(${cpNodes//,/ })
 for item in "${list[@]}"; do
     item=$(wPort ${item} "8090")
-    if [[ "${ocneVer}" == "1.5."* ]]; then
+    if [[ "${ocneVer}" == "1.5."* ]] || [[ "${ocneVer}" == "1.5" ]]; then
         addArg kubernetes master-nodes ${item}
     else
         addArg kubernetes control-plane-nodes ${item}

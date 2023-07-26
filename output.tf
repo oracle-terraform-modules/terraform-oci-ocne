@@ -90,7 +90,7 @@ output "instance_shape" {
 
 output "image_ocid" {
   description = "The OCID of the OS image to use when creating all compute resources that are part of this deployment"
-  value       = var.image_ocid
+  value       = module.infrastructure.image_ocid
 }
 
 output "os_version" {

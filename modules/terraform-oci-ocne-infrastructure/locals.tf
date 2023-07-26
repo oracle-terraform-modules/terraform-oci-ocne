@@ -7,7 +7,6 @@ locals {
   agents              = flatten(concat(module.control-plane-compute.private_ip, module.worker-compute.private_ip))
   all_nodes           = distinct(concat([local.apiserver_ip], local.control_plane_nodes, local.agents))
   total_nodes         = var.control_plane_node_count + var.worker_node_count + (var.standalone_api_server ? 1 : 0)
-  image_ocid          = length(var.image_ocid) != 0 ? var.image_ocid : module.images.image_ocid
   ocne_short_version  = join("", [element(split("", var.ocne_version), 0), element(split("", var.ocne_version), 2)])
   node_ocids          = flatten(concat(module.control-plane-compute.node_ocids, module.worker-compute.node_ocids))
 

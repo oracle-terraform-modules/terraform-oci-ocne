@@ -40,3 +40,8 @@ output "kube_apiserver_virtual_ip" {
   description = "The 2nd IP of first control plane node to be the Kubernetes API server endpoint"
   value       = var.virtual_ip ? module.control-plane-compute.secondary_private_ip[0] : ""
 }
+
+output "image_ocid" {
+  description = "The OCID of the OS image to use when creating all compute resources that are part of this deployment"
+  value       = length(var.image_ocid) != 0 ? var.image_ocid : module.images[0].image_ocid
+}

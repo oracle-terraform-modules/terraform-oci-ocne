@@ -3,7 +3,7 @@
 
 module "images" {
   source = "../oci-ocne-images"
-
+  count =  length(var.image_ocid) != 0 ? 0 : 1
   compartment_id = var.compartment_id
   os_version     = var.os_version
 }
@@ -28,13 +28,14 @@ module "kube-apiserver-loadbalancer" {
 
 module "api-server-compute" {
   source = "../oci-ocne-compute"
+  depends_on = [module.images]
 
   availability_domain_id   = var.availability_domain_id
   compartment_id           = var.compartment_id
   prefix                   = "${var.prefix}-api-server"
   init_script              = local.apiserver_init
   instance_count           = 1
-  image_ocid               = local.image_ocid
+  image_ocid               = length(var.image_ocid) != 0 ? var.image_ocid : module.images[0].image_ocid
   subnet_id                = var.subnet_id
   instance_shape           = var.instance_shape
   ssh_public_key_path      = var.ssh_public_key_path
@@ -49,13 +50,14 @@ module "api-server-compute" {
 
 module "control-plane-compute" {
   source = "../oci-ocne-compute"
+  depends_on = [module.images]
 
   availability_domain_id   = var.availability_domain_id
   compartment_id           = var.compartment_id
   prefix                   = "${var.prefix}-control-plane"
   init_script              = local.agent_init
   instance_count           = var.standalone_api_server ? var.control_plane_node_count : var.control_plane_node_count - 1
-  image_ocid               = local.image_ocid
+  image_ocid               = length(var.image_ocid) != 0 ? var.image_ocid : module.images[0].image_ocid
   subnet_id                = var.subnet_id
   instance_shape           = var.instance_shape
   ssh_public_key_path      = var.ssh_public_key_path
@@ -72,13 +74,14 @@ module "control-plane-compute" {
 
 module "worker-compute" {
   source = "../oci-ocne-compute"
+  depends_on = [module.images]
 
   availability_domain_id   = var.availability_domain_id
   compartment_id           = var.compartment_id
   prefix                   = "${var.prefix}-worker"
   init_script              = local.agent_init
   instance_count           = var.worker_node_count
-  image_ocid               = local.image_ocid
+  image_ocid               = length(var.image_ocid) != 0 ? var.image_ocid : module.images[0].image_ocid
   subnet_id                = var.subnet_id
   instance_shape           = var.instance_shape
   ssh_public_key_path      = var.ssh_public_key_path
