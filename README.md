@@ -117,8 +117,8 @@ descriptions in variables.tf for information about how each is used.
 |os_version|The version of Oracle Linux to use as the base image for all compute resources that are part of this deployemnt.|
 |environment_name|The name of the OCNE Environment that is created by this module to deploy module instances into. For more details, please see [Creating an Environment](https://docs.oracle.com/en/operating-systems/olcne/start/install.html#env-create).|
 |kubernetes_name|The name of the instance of the OCNE Kubernetes module that is installed as part of this deployment. For more details, please see [Creating a Kubernetes Module](https://docs.oracle.com/en/operating-systems/olcne/start/install.html#mod-kube).|
-|ocne_version|The version and release of OCNE to deploy. For more details on the versions, please see the [OCNE Release Notes](https://docs.oracle.com/en/operating-systems/olcne/1.6/relnotes/components.html#components). To install the latest patch version of <major.minor>, please set the value to `<major.minor>` or set the value to `<major.minor.patch>` to install a specific patch version.|
-|config_file_path|The path to the OCNE configuration file. For more details on the configuration file, please see the [OCNE configuration file](https://docs.oracle.com/en/operating-systems/olcne/1.6/olcnectl/config.html)|
+|ocne_version|The version and release of OCNE to deploy. For more details on the versions, please see the [OCNE Release Notes](https://docs.oracle.com/en/operating-systems/olcne/1.7/relnotes/components.html#components). To install the latest patch version of <major.minor>, please set the value to `<major.minor>` or set the value to `<major.minor.patch>` to install a specific patch version.|
+|config_file_path|The path to the OCNE configuration file. For more details on the configuration file, please see the [OCNE configuration file](https://docs.oracle.com/en/operating-systems/olcne/1.7/olcnectl/config.html)|
 
 #### Using Object Storage for State Files
 

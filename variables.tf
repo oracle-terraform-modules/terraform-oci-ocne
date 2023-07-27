@@ -143,8 +143,8 @@ variable "no_proxy" {
 
 variable "ocne_version" {
   type        = string
-  description = "The version and release of OCNE to deploy. For more details on the versions, please see the [OCNE Release Notes](https://docs.oracle.com/en/operating-systems/olcne/relnotes/). The default value '1.6' is to install the latest patch version of 1.6. To install a specific patch version, please set the value to `<major.minor.patch>` or `<major.minor.patch>-<release>`."
-  default     = "1.6"
+  description = "The version and release of OCNE to deploy. For more details on the versions, please see the [OCNE Release Notes](https://docs.oracle.com/en/operating-systems/olcne/1.7/relnotes/components.html#components). The default value '1.7' is to install the latest patch version of 1.7. To install a specific patch version, please set the value to `<major.minor.patch>` or `<major.minor.patch>-<release>`."
+  default     = "1.7"
 }
 
 variable "yum_repo_url" {
@@ -331,6 +331,6 @@ variable "boot_volume_size_in_gbs" {
 
 variable "config_file_path" {
   type        = string
-  description = "The path to the OCNE configuration file - https://docs.oracle.com/en/operating-systems/olcne/1.6/olcnectl/config.html"
+  description = "The path to the OCNE configuration file - https://docs.oracle.com/en/operating-systems/olcne/1.7/olcnectl/config.html"
   default     = ""
 }
