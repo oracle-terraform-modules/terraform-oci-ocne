@@ -84,7 +84,7 @@ if [[ -e ${cfgFile} ]]; then
     if [ "${k8sName}" != "mycluster" ] && [ "${k8sName}" != ""  ]; then
         ERR=`addErr "Remove variable kubernetes_name=${k8sName} from terraform.tfvars"`
     fi
-    if [ "${ocneVer}" != "1.6" ] && [ "${ocneVer}" != ""  ]; then
+    if [ "${ocneVer}" != "1.7" ] && [ "${ocneVer}" != ""  ]; then
         ERR=`addErr "Remove variable ocne_version=${ocneVer} from terraform.tfvars"`
     fi
     numOfEnv=`yq eval '.environments | length' ${cfgFile}`

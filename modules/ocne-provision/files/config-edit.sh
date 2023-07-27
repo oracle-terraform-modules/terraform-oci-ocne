@@ -99,7 +99,7 @@ fi
 addEnv remote-command "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 if [[ "${ocneVer}" != "" ]]; then
     curVer=$(getEnv version)
-    if [[ "${curVer}" == "" || "${curVer}" == "null" || "${curVer}" == "1.6" ]]; then
+    if [[ "${curVer}" == "" || "${curVer}" == "null" || "${curVer}" == "1.7" ]]; then
         setEnv version "${ocneVer}"
     fi
 fi
