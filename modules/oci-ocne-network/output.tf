@@ -6,8 +6,8 @@ output "vcn_id" {
   value = var.deploy_networking ? module.vcn[0].vcn_id : var.vcn_id
 }
 
-output "bastion_public_ip" {
-  value = var.enable_bastion ? module.bastion[0].bastion_public_ip : ""
+output "ig_route_id" {
+  value = var.deploy_networking ? module.vcn[0].ig_route_id : var.ig_route_id
 }
 
 output "private_security_list_id" {

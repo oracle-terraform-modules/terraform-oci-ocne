@@ -58,6 +58,24 @@ module "oci-ocne-network" {
   freeform_tags        = var.freeform_tags
 }
 
+module "bastion" {
+  source = "./modules/terraform-oci-bastion"
+  count  = var.enable_bastion ? 1 : 0
+
+  tenancy_id           = var.tenancy_id
+  compartment_id       = var.compartment_id
+  ig_route_id          = var.deploy_networking ? module.oci-ocne-network[0].ig_route_id : var.ig_route_id
+  region               = var.region
+  vcn_id               = var.deploy_networking ? module.oci-ocne-network[0].vcn_id : var.vcn_id
+  fingerprint          = var.fingerprint
+  api_private_key_path = var.api_private_key_path
+  prefix               = var.prefix
+  ssh_public_key_path  = var.ssh_public_key_path
+  user_id              = var.user_id
+  enable_notification = var.enable_notification
+  freeform_tags        = var.freeform_tags
+}
+
 module "infrastructure" {
   depends_on = [null_resource.variable_validation]
   source     = "./modules/terraform-oci-ocne-infrastructure"
@@ -79,7 +97,7 @@ module "infrastructure" {
   yum_repo_url             = var.yum_repo_url
   ocne_version             = data.external.ocne_config.result.version
   enable_bastion          = var.enable_bastion
-  bastion_public_ip        = var.enable_bastion ? module.oci-ocne-network[0].bastion_public_ip : var.bastion_public_ip
+  bastion_public_ip        = var.enable_bastion ? module.bastion[0].bastion_public_ip : var.bastion_public_ip
   bastion_user             = var.bastion_user
   bastion_private_key_path = var.enable_bastion || var.bastion_public_ip != "" ? var.bastion_private_key_path : ""
   compute_user             = var.compute_user
@@ -118,7 +136,7 @@ module "vault" {
   ocne_secret_name        = local.ocne_secret_name
   load_balancer_shape      = var.load_balancer_shape
   enable_bastion          = var.enable_bastion
-  bastion_public_ip        = var.enable_bastion ? module.oci-ocne-network[0].bastion_public_ip : var.bastion_public_ip
+  bastion_public_ip        = var.enable_bastion ? module.bastion[0].bastion_public_ip : var.bastion_public_ip
   bastion_user             = var.bastion_user
   bastion_private_key_path = var.enable_bastion || var.bastion_public_ip != "" ? var.bastion_private_key_path : ""
   compute_user             = var.compute_user
@@ -151,7 +169,7 @@ module "ocne-provision" {
   container_registry        = var.container_registry
   certificate_signing_token = var.use_vault ? module.vault[0].vault_ocne_client_token : ""
   enable_bastion           = var.enable_bastion
-  bastion_public_ip         = var.enable_bastion ? module.oci-ocne-network[0].bastion_public_ip : var.bastion_public_ip
+  bastion_public_ip         = var.enable_bastion ? module.bastion[0].bastion_public_ip : var.bastion_public_ip
   bastion_user              = var.bastion_user
   bastion_private_key_path  = var.enable_bastion || var.bastion_public_ip != "" ? var.bastion_private_key_path : ""
   node_ocids                = module.infrastructure.node_ocids

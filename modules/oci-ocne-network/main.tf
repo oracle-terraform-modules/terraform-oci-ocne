@@ -21,25 +21,6 @@ module "vcn" {
   freeform_tags = var.freeform_tags
 }
 
-module "bastion" {
-  source = "../terraform-oci-bastion"
-  count  = var.enable_bastion ? 1 : 0
-
-  tenancy_id           = var.tenancy_id
-  compartment_id       = var.compartment_id
-  ig_route_id          = var.deploy_networking ? module.vcn[0].ig_route_id : var.ig_route_id
-  region               = var.region
-  vcn_id               = var.deploy_networking ? module.vcn[0].vcn_id : var.vcn_id
-  fingerprint          = var.fingerprint
-  api_private_key_path = var.api_private_key_path
-  prefix               = var.prefix
-  ssh_public_key_path  = var.ssh_public_key_path
-  user_id              = var.user_id
-  availability_domain  = var.availability_domain
-  enable_notification = var.enable_notification
-  freeform_tags        = var.freeform_tags
-}
-
 resource "oci_core_subnet" "tf_vcn_private_subnet" {
   count = var.deploy_networking ? 1 : 0
 
