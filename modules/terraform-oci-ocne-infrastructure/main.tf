@@ -2,32 +2,31 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 module "images" {
-  source = "../oci-ocne-images"
-  count =  length(var.image_ocid) != 0 ? 0 : 1
+  source         = "../oci-ocne-images"
+  count          = length(var.image_ocid) != 0 ? 0 : 1
   compartment_id = var.compartment_id
   os_version     = var.os_version
 }
 
 module "kube-apiserver-loadbalancer" {
-  source                 = "../oci-ocne-loadbalancer"
-  availability_domain_id = var.availability_domain_id
-  compartment_id         = var.compartment_id
-  prefix                 = "${var.prefix}-cp"
-  subnet_id              = var.subnet_id
-  shape                  = var.load_balancer_shape
-  policy                 = var.load_balancer_policy
-  protocol               = "TCP"
-  port                   = var.kube_apiserver_port
-  backends               = { for ip in local.control_plane_nodes : ip => var.kube_apiserver_port }
-  backend_count          = var.control_plane_node_count
-  instance_count         = var.virtual_ip ? 0 : 1
+  source         = "../oci-ocne-loadbalancer"
+  compartment_id = var.compartment_id
+  prefix         = "${var.prefix}-cp"
+  subnet_id      = var.subnet_id
+  shape          = var.load_balancer_shape
+  policy         = var.load_balancer_policy
+  protocol       = "TCP"
+  port           = var.kube_apiserver_port
+  backends       = { for ip in local.control_plane_nodes : ip => var.kube_apiserver_port }
+  backend_count  = var.control_plane_node_count
+  instance_count = var.virtual_ip ? 0 : 1
 
   # Optional
   freeform_tags = var.freeform_tags
 }
 
 module "api-server-compute" {
-  source = "../oci-ocne-compute"
+  source     = "../oci-ocne-compute"
   depends_on = [module.images]
 
   availability_domain_id   = var.availability_domain_id
@@ -40,16 +39,18 @@ module "api-server-compute" {
   instance_shape           = var.instance_shape
   ssh_public_key_path      = var.ssh_public_key_path
   ssh_private_key_path     = var.ssh_private_key_path
-  enable_bastion          = var.enable_bastion
+  enable_bastion           = var.enable_bastion
   bastion_public_ip        = var.bastion_public_ip
   bastion_user             = var.bastion_user
   bastion_private_key_path = var.bastion_private_key_path
   compute_user             = var.compute_user
   freeform_tags            = var.freeform_tags
+  attach_secondary_vnic    = var.standalone_api_server ? false : var.virtual_ip
+  boot_volume_size_in_gbs  = var.boot_volume_size_in_gbs
 }
 
 module "control-plane-compute" {
-  source = "../oci-ocne-compute"
+  source     = "../oci-ocne-compute"
   depends_on = [module.images]
 
   availability_domain_id   = var.availability_domain_id
@@ -62,18 +63,18 @@ module "control-plane-compute" {
   instance_shape           = var.instance_shape
   ssh_public_key_path      = var.ssh_public_key_path
   ssh_private_key_path     = var.ssh_private_key_path
-  enable_bastion          = var.enable_bastion
+  enable_bastion           = var.enable_bastion
   bastion_public_ip        = var.bastion_public_ip
   bastion_user             = var.bastion_user
   bastion_private_key_path = var.bastion_private_key_path
   compute_user             = var.compute_user
   freeform_tags            = var.freeform_tags
-  attach_secondary_vnic    = var.virtual_ip
+  attach_secondary_vnic    = var.standalone_api_server ? var.virtual_ip : false
   boot_volume_size_in_gbs  = var.boot_volume_size_in_gbs
 }
 
 module "worker-compute" {
-  source = "../oci-ocne-compute"
+  source     = "../oci-ocne-compute"
   depends_on = [module.images]
 
   availability_domain_id   = var.availability_domain_id
@@ -86,7 +87,7 @@ module "worker-compute" {
   instance_shape           = var.instance_shape
   ssh_public_key_path      = var.ssh_public_key_path
   ssh_private_key_path     = var.ssh_private_key_path
-  enable_bastion          = var.enable_bastion
+  enable_bastion           = var.enable_bastion
   bastion_public_ip        = var.bastion_public_ip
   bastion_user             = var.bastion_user
   bastion_private_key_path = var.bastion_private_key_path

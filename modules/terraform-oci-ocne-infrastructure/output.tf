@@ -38,7 +38,7 @@ output "node_ocids" {
 
 output "kube_apiserver_virtual_ip" {
   description = "The 2nd IP of first control plane node to be the Kubernetes API server endpoint"
-  value       = var.virtual_ip ? module.control-plane-compute.secondary_private_ip[0] : ""
+  value       = var.virtual_ip ? (var.standalone_api_server ? module.control-plane-compute.secondary_private_ip[0] : module.api-server-compute.secondary_private_ip[0]) : ""
 }
 
 output "image_ocid" {

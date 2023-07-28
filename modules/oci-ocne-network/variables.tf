@@ -2,19 +2,6 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # Variables
-variable "fingerprint" {
-  type = string
-}
-
-variable "api_private_key_path" {
-  type = string
-}
-
-variable "availability_domain" {
-  type    = number
-  default = "1"
-}
-
 variable "compartment_id" {
   type = string
 }
@@ -28,20 +15,7 @@ variable "private_dns_label" {
   default = "private"
 }
 
-variable "region" {
-  type    = string
-  default = "us-phoenix-2"
-}
-
 variable "ssh_public_key_path" {
-  type = string
-}
-
-variable "tenancy_id" {
-  type = string
-}
-
-variable "user_id" {
   type = string
 }
 

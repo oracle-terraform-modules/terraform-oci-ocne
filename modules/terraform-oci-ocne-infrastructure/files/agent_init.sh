@@ -16,4 +16,3 @@ else
     yum-config-manager --add-repo ${yum_repo_url}
   fi
 fi
-

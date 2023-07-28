@@ -156,12 +156,6 @@ variable "bastion_private_key_path" {
   description = "The location of the SSH private key for the Bastion host"
 }
 
-// Common OCI resource variables
-variable "availability_domain_id" {
-  type        = string
-  description = "The ID of the availability domain inside the `region` in which to create this deployment"
-}
-
 variable "restrict_service_externalip_cidrs" {
   type        = string
   description = "A set of CIDR blocks to allow for the externalIp field in Kubernetes Services"

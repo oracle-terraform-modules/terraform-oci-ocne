@@ -81,7 +81,6 @@ module "vault-autoscaler" {
 module "vault-kms" {
   source = "../oci-ocne-kms"
 
-  availability_domain_id = var.availability_domain_id
   compartment_id         = var.compartment_id
   prefix                 = var.prefix
   vault_ocid             = var.vault_ocid

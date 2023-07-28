@@ -325,7 +325,7 @@ variable "virtual_ip" {
 
 variable "boot_volume_size_in_gbs" {
   type        = number
-  description = "The number of boot volume size in GBs used for each of Kubernetes nodes"
+  description = "The number of boot volume size in GBs"
   default       = null
 }
 

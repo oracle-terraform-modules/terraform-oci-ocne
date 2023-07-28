@@ -11,7 +11,6 @@ module "vcn" {
   compartment_id    = var.compartment_id
 
   # Optional
-  region            = var.region
   vcn_name          = "${var.prefix}-vcn"
   vcn_dns_label     = var.vcn_dns_label
   create_internet_gateway = true

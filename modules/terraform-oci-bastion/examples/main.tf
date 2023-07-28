@@ -4,8 +4,6 @@
 module "bastion" {
   source = "../"
 
-  region = "us-phoenix-1"
-
   # general oci parameters
 
   compartment_id = ""

@@ -42,13 +42,8 @@ module "oci-ocne-network" {
   source     = "./modules/oci-ocne-network"
   count      = (var.deploy_networking && var.enable_bastion) || var.enable_bastion ? 1 : 0
 
-  tenancy_id           = var.tenancy_id
   compartment_id       = var.compartment_id
-  region               = var.region
-  fingerprint          = var.fingerprint
-  api_private_key_path = var.api_private_key_path
   ssh_public_key_path  = var.ssh_public_key_path
-  user_id              = var.user_id
   prefix               = var.prefix
   deploy_networking    = var.deploy_networking
   enable_bastion      = var.enable_bastion
@@ -65,13 +60,9 @@ module "bastion" {
   tenancy_id           = var.tenancy_id
   compartment_id       = var.compartment_id
   ig_route_id          = var.deploy_networking ? module.oci-ocne-network[0].ig_route_id : var.ig_route_id
-  region               = var.region
   vcn_id               = var.deploy_networking ? module.oci-ocne-network[0].vcn_id : var.vcn_id
-  fingerprint          = var.fingerprint
-  api_private_key_path = var.api_private_key_path
   prefix               = var.prefix
   ssh_public_key_path  = var.ssh_public_key_path
-  user_id              = var.user_id
   enable_notification = var.enable_notification
   freeform_tags        = var.freeform_tags
 }
@@ -173,7 +164,6 @@ module "ocne-provision" {
   bastion_user              = var.bastion_user
   bastion_private_key_path  = var.enable_bastion || var.bastion_public_ip != "" ? var.bastion_private_key_path : ""
   node_ocids                = module.infrastructure.node_ocids
-  availability_domain_id    = var.availability_domain_id
   compute_user              = var.compute_user
   debug                     = var.debug
   restrict_service_externalip_cidrs = var.restrict_service_externalip_cidrs

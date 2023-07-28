@@ -2,11 +2,6 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 // Common OCI resource variables
-variable "availability_domain_id" {
-  type        = string
-  description = "The ID of the availability domain inside the `region` in which to create this deployment"
-}
-
 variable "compartment_id" {
   type        = string
   description = "The OCID of the compartment in which to create this deployment"

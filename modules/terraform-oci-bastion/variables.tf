@@ -2,32 +2,8 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # provider identity parameters
-variable "fingerprint" {
-  description = "fingerprint of oci api private key"
-  type        = string
-  default     = ""
-}
-
-variable "api_private_key_path" {
-  description = "path to oci api private key used"
-  type        = string
-  default     = ""
-}
-
-variable "region" {
-  # List of regions: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm#ServiceAvailabilityAcrossRegions
-  description = "the oci region where resources will be created"
-  type        = string
-}
-
 variable "tenancy_id" {
   description = "tenancy id where to create the sources"
-  type        = string
-  default     = ""
-}
-
-variable "user_id" {
-  description = "id of user that terraform will use to create the resources"
   type        = string
   default     = ""
 }
