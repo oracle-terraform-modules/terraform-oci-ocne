@@ -170,7 +170,7 @@ variable "debug" {
 
 variable "config_file_path" {
   type        = string
-  description = "The path to the configuration file of OLCNE modules"
+  description = "The path to the OCNE configuration file"
   default     = ""
 }
 
