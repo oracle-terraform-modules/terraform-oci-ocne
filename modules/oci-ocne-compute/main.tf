@@ -6,8 +6,23 @@ resource "oci_core_instance" "instance" {
   availability_domain = var.availability_domain_id
   compartment_id      = var.compartment_id
   display_name        = format("${var.prefix}-%03d", count.index + 1)
-  shape               = var.instance_shape
   freeform_tags       = var.freeform_tags
+
+  shape = lookup(var.instance_shape, "shape", "VM.Standard2.2")
+
+  dynamic "shape_config" {
+    for_each = length(regexall("Flex", lookup(var.instance_shape, "shape", "VM.Standard.E3.Flex"))) > 0 ? [1] : []
+    content {
+      ocpus         = max(1, lookup(var.instance_shape, "ocpus", 1))
+      memory_in_gbs = (lookup(var.instance_shape, "memory", 4) / lookup(var.instance_shape, "ocpus", 1)) > 64 ? (lookup(var.instance_shape, "ocpus", 1) * 16) : lookup(var.instance_shape, "memory", 4)
+    }
+  }
+
+  source_details {
+    source_type             = "image"
+    source_id               = var.image_ocid
+    boot_volume_size_in_gbs = lookup(var.instance_shape, "boot_volume_size", 50)
+  }
 
   connection {
     agent               = false
@@ -30,12 +45,6 @@ resource "oci_core_instance" "instance" {
     ssh_authorized_keys = file(var.ssh_public_key_path)
   }
 
-  source_details {
-    source_type = "image"
-    source_id   = var.image_ocid
-	  boot_volume_size_in_gbs = var.boot_volume_size_in_gbs
-  }
-
   provisioner "file" {
     content     = var.init_script
     destination = "/home/${var.compute_user}/ocne-init.sh"
@@ -54,9 +63,9 @@ resource "oci_core_vnic_attachment" "second_vnic" {
   instance_id = oci_core_instance.instance[count.index].id
   create_vnic_details {
     assign_public_ip = "false"
-#   subnet_id        = var.secondary_subnet_id
-    subnet_id        = var.subnet_id
-    freeform_tags    = var.freeform_tags
+    #   subnet_id        = var.secondary_subnet_id
+    subnet_id     = var.subnet_id
+    freeform_tags = var.freeform_tags
   }
 }
 

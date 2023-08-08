@@ -46,7 +46,6 @@ module "api-server-compute" {
   compute_user             = var.compute_user
   freeform_tags            = var.freeform_tags
   attach_secondary_vnic    = var.standalone_api_server ? false : var.virtual_ip
-  boot_volume_size_in_gbs  = var.boot_volume_size_in_gbs
 }
 
 module "control-plane-compute" {
@@ -70,7 +69,6 @@ module "control-plane-compute" {
   compute_user             = var.compute_user
   freeform_tags            = var.freeform_tags
   attach_secondary_vnic    = var.standalone_api_server ? var.virtual_ip : false
-  boot_volume_size_in_gbs  = var.boot_volume_size_in_gbs
 }
 
 module "worker-compute" {
@@ -93,7 +91,6 @@ module "worker-compute" {
   bastion_private_key_path = var.bastion_private_key_path
   compute_user             = var.compute_user
   freeform_tags            = var.freeform_tags
-  boot_volume_size_in_gbs  = var.boot_volume_size_in_gbs
 }
 
 resource "null_resource" "copy_apiserver_ssh_key" {

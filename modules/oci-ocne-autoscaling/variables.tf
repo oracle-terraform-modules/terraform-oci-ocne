@@ -18,7 +18,7 @@ variable "prefix" {
 }
 
 variable "instance_shape" {
-  type        = string
+  type        = map(any)
   description = "The OCI instance shape to use for all compute resources that are created as part of this deployment"
 }
 

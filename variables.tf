@@ -53,9 +53,11 @@ variable "prefix" {
 }
 
 variable "instance_shape" {
-  type        = string
+  type        = map(any)
   description = "The OCI instance shape to use for all compute resources that are created as part of this deployment"
-  default     = "VM.Standard2.2"
+  default = {
+    shape = "VM.Standard.E4.Flex", ocpus = 2, memory = 32, boot_volume_size = 50
+  }
 }
 
 variable "image_ocid" {
@@ -267,6 +269,14 @@ variable "enable_bastion" {
   default     = true
 }
 
+variable "bastion_shape" {
+  type = map(any)
+  description = "The shape of bastion instance."
+  default = {
+    shape = "VM.Standard.E3.Flex", ocpus = 1, memory = 4, boot_volume_size = 50
+  }
+}
+
 variable "bastion_public_ip" {
   type        = string
   description = "Public IP address of an existing Bastion host. This is set when we are not creating a bastion but need to use an existing one."
@@ -300,9 +310,9 @@ variable "freeform_tags" {
 }
 
 variable "restrict_service_externalip_cidrs" {
-  type = string
+  type        = string
   description = "A set of CIDR blocks to allow for the externalIp field in Kubernetes Services"
-  default = ""
+  default     = ""
 }
 
 variable "debug" {
@@ -321,12 +331,6 @@ variable "virtual_ip" {
   type        = bool
   description = "Setup Kubernetes API server endpoint on a virtual IP address representing all the Kubernetes control plane nodes"
   default     = false
-}
-
-variable "boot_volume_size_in_gbs" {
-  type        = number
-  description = "The number of boot volume size in GBs"
-  default       = null
 }
 
 variable "config_file_path" {

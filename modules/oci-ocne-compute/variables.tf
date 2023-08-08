@@ -18,7 +18,7 @@ variable "prefix" {
 }
 
 variable "instance_shape" {
-  type        = string
+  type        = map(any)
   description = "The OCI instance shape to use for all compute resources that are created as part of this deployment"
 }
 
@@ -92,13 +92,7 @@ variable "compute_user" {
 }
 
 variable "freeform_tags" {
-  description   = "Freeform tags with useful miscellaneous information."
-  type          = map(any)
-  default       = {}
-}
-
-variable "boot_volume_size_in_gbs" {
-  type        = number
-  description = "The number of boot volume size in GBs"
-  default       = null
+  description = "Freeform tags with useful miscellaneous information."
+  type        = map(any)
+  default     = {}
 }
