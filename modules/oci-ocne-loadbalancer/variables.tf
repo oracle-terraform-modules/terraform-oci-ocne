@@ -19,9 +19,8 @@ variable "subnet_id" {
 
 // Load balancer specific variables
 variable "shape" {
-  type        = string
+  type        = map(string)
   description = "The OCI shape of the load balancer to create"
-  default     = "10Mbps"
 }
 
 variable "policy" {

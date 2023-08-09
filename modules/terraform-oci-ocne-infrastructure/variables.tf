@@ -56,9 +56,8 @@ variable "ssh_private_key_path" {
 
 // Instance pool specific variables
 variable "load_balancer_shape" {
-  type        = string
+  type        = map(string)
   description = "The OCI load balancer shape to use when creating load balancers for this deployment"
-  default     = "10Mbps"
 }
 
 variable "load_balancer_policy" {

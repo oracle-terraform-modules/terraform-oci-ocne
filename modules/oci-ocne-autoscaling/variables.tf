@@ -48,10 +48,9 @@ variable "pool_size" {
   description = "The initial number of compute instances to spawn as part of this deployment"
 }
 
-
 // Load balancer specific variables
 variable "load_balancer_shape" {
-  type        = string
+  type        = map(string)
   description = "The OCI shape of the load balancer to create to service this pool"
 }
 

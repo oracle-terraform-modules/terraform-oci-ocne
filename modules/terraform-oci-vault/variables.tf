@@ -118,7 +118,7 @@ variable "vault_namespace" {
 }
 
 variable "load_balancer_shape" {
-  type        = string
+  type        = map(string)
   description = "The OCI shape of the load balancer to create to service this pool"
 }
 

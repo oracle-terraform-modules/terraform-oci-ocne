@@ -5,11 +5,15 @@ resource "oci_load_balancer_load_balancer" "lb" {
   count          = var.create_load_balancer ? 1 : 0
   compartment_id = var.compartment_id
   display_name   = "${var.prefix}-load-balancer"
-  shape          = var.load_balancer_shape
+  shape          = lookup(var.load_balancer_shape, "shape")
   subnet_ids     = [var.subnet_id]
   is_private     = "true"
 
   # Optional
+  shape_details {
+    minimum_bandwidth_in_mbps = lookup(var.load_balancer_shape, "flex_min")
+    maximum_bandwidth_in_mbps = lookup(var.load_balancer_shape, "flex_max")
+  }
   freeform_tags = var.freeform_tags
 }
 

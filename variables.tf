@@ -108,9 +108,13 @@ variable "vault_pool_size" {
 }
 
 variable "load_balancer_shape" {
-  type        = string
+  type        = map(string)
   description = "The OCI load balancer shape to use when creating load balancers for this deployment"
-  default     = "10Mbps"
+  default = {
+    shape    = "flexible"
+    flex_min = "10"
+    flex_max = "50"
+  }
 }
 
 variable "load_balancer_policy" {
@@ -270,7 +274,7 @@ variable "enable_bastion" {
 }
 
 variable "bastion_shape" {
-  type = map(any)
+  type        = map(any)
   description = "The shape of bastion instance."
   default = {
     shape = "VM.Standard.E3.Flex", ocpus = 1, memory = 4, boot_volume_size = 50
