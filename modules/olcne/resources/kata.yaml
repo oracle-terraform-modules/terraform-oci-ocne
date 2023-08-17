@@ -1,8 +1,0 @@
-# Copyright 2020, Oracle Corporation and/or affiliates.  
-# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
-
-kind: RuntimeClass
-apiVersion: node.k8s.io/v1beta1
-metadata:
-    name: ${kata_runtime_class_name}
-handler: kata

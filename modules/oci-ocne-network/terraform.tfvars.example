@@ -1,0 +1,10 @@
+# Copyright (c) 2023 Oracle Corporation and/or affiliates.  All rights reserved.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
+
+compartment_id = "<compartment_id"
+name = "<environment_name"
+fingerprint = "<fingerprint>"
+api_private_key_path = "<oci_private_key_path>"
+ssh_public_key_path = "<ssh_public_key_path>"
+user_id ="<user_id>"
+tenancy_id = "<tenancy_id>

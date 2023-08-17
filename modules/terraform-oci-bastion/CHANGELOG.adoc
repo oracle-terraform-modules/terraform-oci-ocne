@@ -1,0 +1,40 @@
+= CHANGELOG
+:idprefix:
+:idseparator: *
+
+:uri-changelog: http://keepachangelog.com/
+All notable changes to this project are documented in this file.
+
+The format is based on {uri-changelog}[Keep a Changelog].
+
+= v1.0.7 (August 31,2020)
+* Reversed 1.04 and and 1.0.5 (#9)
+
+= v1.0.6 (August 31,2020)
+* Use root_compartment_id instead of tenancy_id for dynamic group
+
+== v1.0.5 (August 5,2020)
+* tenancy id is needed for list of ADs (#7)
+
+== v1.0.4 (August 5,2020)
+* Home provider configuration changes (#5)
+
+== v1.0.3 (July 15,2020)
+* Made prefix optional (#3)
+
+== v1.0.2 (June 10,2020)
+
+=== Changes
+* Removed image operating system version from datasource (#1)
+
+== v1.0.1 (May 27,2020)
+
+=== Changes
+* updated tags
+
+== v1.0.0 (May 21,2020)
+
+=== Changes
+* First release after split from terraform-oci-base
+* changed most variables to simple types
+* updated docs

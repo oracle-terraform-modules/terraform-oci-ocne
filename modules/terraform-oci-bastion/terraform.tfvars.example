@@ -1,0 +1,68 @@
+# Copyright (c) 2023 Oracle Corporation and/or affiliates.  All rights reserved.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
+
+# provider identity parameters
+
+fingerprint = ""
+
+api_private_key_path = ""
+
+region = "us-phoenix-1"
+
+tenancy_id = ""
+
+user_id = ""
+
+# general oci parameters
+
+compartment_id = ""
+
+prefix = "dev"
+
+# network parameters
+
+availability_domain = 1
+
+bastion_access = "ANYWHERE"
+
+ig_route_id = ""
+
+netnum = 32
+
+newbits = 13
+
+vcn_id = ""
+
+enable_bastion = true
+
+bastion_image_id = "Autonomous"
+
+bastion_shape = {
+  # shape = "VM.Standard.E2.2"
+  shape="VM.Standard.E3.Flex",
+  ocpus=1,
+  memory=4,
+  boot_volume_size=50
+}
+
+bastion_upgrade = false
+
+ssh_public_key = ""
+
+ssh_public_key_path = ""
+
+# notification
+
+enable_notification = false
+
+notification_endpoint = ""
+
+notification_protocol = "EMAIL"
+
+notification_topic = "bastion"
+
+tags = {
+    department  = "finance"
+    environment = "dev"
+    role        = "bastion"
+}

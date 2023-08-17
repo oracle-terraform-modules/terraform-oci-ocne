@@ -1,147 +1,28 @@
-# Copyright 2020, Oracle Corporation and/or affiliates.  
+# Copyright (c) 2023 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# Identity and access parameters
+// OCI Identity Variables
+tenancy_id = "<tenancy_ocid>"
+compartment_id = "<compartment_ocid>"
+user_id = "<user_ocid>"
+fingerprint = "<fingerprint>"
+api_private_key_path = "<api_private_key_path>"
 
-api_fingerprint = ""
+// Common OCI resource variables
+region = "<region>"
+availability_domain_id = "<availability_domain_name>"
+prefix = "<unique_prefix>"
 
-api_private_key_path = ""
+// Compute instance specific variables
+ssh_public_key_path = "<ssh_public_key_path>"
+ssh_private_key_path = "<ssh_private_key_path>"
 
-compartment_id = ""
+// Bastion specific variables
+bastion_private_key_path = "<bastion_private_key_path>"
 
-region = "us-phoenix-1"
+// OCNE Overrides
+control_plane_node_count = "3"
+worker_node_count = "3"
+environment_name = "myenvironment"
+kubernetes_name = "mycluster"
 
-tenancy_id = ""
-
-user_id = ""
-
-ssh_private_key_path = "/path/to/ssh_private_key"
-
-ssh_public_key_path = "/path/to/ssh_public_key"
-
-ssh_public_key = ""
-
-# general oci parameters
-label_prefix = "dev"
-
-# networking
-
-netnum = {
-  bastion  = 32
-  int_lb   = 16
-  masters  = 48
-  operator = 33
-  pub_lb   = 17
-  workers  = 1
-}
-
-newbits = {
-  bastion  = 13
-  lb       = 11
-  masters  = 12
-  operator = 13
-  workers  = 2
-}
-
-vcn_cidr = "10.0.0.0/16"
-
-vcn_dns_label = "olcne"
-
-vcn_name = "olcne"
-
-# bastion
-
-bastion_access = "ANYWHERE"
-
-bastion_image_id = "Autonomous"
-
-bastion_notification_enabled = true
-
-bastion_notification_endpoint = ""
-
-bastion_notification_protocol = "EMAIL"
-
-bastion_notification_topic = "bastion_server_notification"
-
-bastion_package_upgrade = false
-
-bastion_shape = "VM.Standard.E2.2"
-
-bastion_timezone = "Australia/Sydney"
-
-operator_image_id = "Oracle"
-
-operator_notification_enabled = false
-
-operator_notification_endpoint = ""
-
-operator_notification_protocol = "EMAIL"
-
-operator_notification_topic = ""
-
-operator_package_upgrade = false
-
-operator_shape = "VM.Standard.E2.2"
-
-operator_timezone = "Australia/Sydney"
-
-# availability_domains
-
-availability_domains = {
-  bastion  = 1
-  operator = 1
-}
-
-# olcne
-
-## olcne master
-master_image_id = "Oracle"
-
-master_package_upgrade = false
-
-master_shape = "VM.Standard.E2.2"
-
-master_size = 1
-
-master_timezone = "Australia/Sydney"
-
-# private key for operator
-
-secret_id = ""
-
-environment_name = "dev"
-
-cluster_name = "olcne"
-
-helm_version = "3.1.1"
-
-create_kata_runtime = false
-
-kata_runtime_class_name = "kata"
-
-# certificate
-
-org_unit = ""
-
-org = ""
-
-city = ""
-
-state = ""
-
-country = ""
-
-common_name = ""
-
-# olcne worker
-worker_image_id = "Oracle"
-
-worker_package_upgrade = false
-
-worker_shape = "VM.Standard.E2.2"
-
-worker_size = 3
-
-worker_timezone = "Australia/Sydney"
-
-deploy_nginx_software = true

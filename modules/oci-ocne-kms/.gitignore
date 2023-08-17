@@ -6,11 +6,10 @@
 # .tfstate files
 *.tfstate
 *.tfstate.*
-.terraform
 
 # Crash log files
 crash.log
-*.txt
+
 # Ignore any .tfvars files that are generated automatically for each Terraform run. Most
 # .tfvars files are managed as part of configuration and so should be included in
 # version control.
@@ -36,7 +35,6 @@ override.tf.json
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff
-.idea/
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
@@ -103,10 +101,3 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 
-# Terraform config
-modules/certs
-.terraform.lock.hcl
-kubeconfig
-state-backend.tf
-terraform_vars.sh
-terraform.tfvars

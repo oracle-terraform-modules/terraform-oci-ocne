@@ -1,0 +1,100 @@
+= Quickstart
+
+:idprefix:
+:idseparator: -
+:sectlinks:
+
+
+:uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-bastion
+:uri-rel-file-base: link:{uri-repo}/blob/master
+:uri-rel-tree-base: link:{uri-repo}/tree/master
+:uri-docs: {uri-rel-file-base}/docs
+:uri-oci-keys: https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm
+:uri-oci-ocids: https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm#five
+:uri-terraform: https://www.terraform.io
+:uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
+:uri-terraform-options: {uri-docs}/terraformoptions.adoc
+:uri-variables: {uri-rel-file-base}/variables.tf
+
+. link:#assumptions[Assumptions]
+. link:#pre-requisites[Pre-requisites]
+. link:#instructions[Instructions]
+. link:#related-documentation[Related documentation]
+
+=== Assumptions
+
+1. You have setup the {uri-oci-keys}[required keys]
+2. You know the {uri-oci-ocids}[required OCIDs]
+3. You have the necessary permissions
+
+=== Pre-requisites
+
+1. git is installed
+2. ssh client is installed
+3. Terraform 0.12.24+ is installed
+
+=== Provisioning using this git repo
+
+. Clone the repo:
+
++
+[source,bash]
+----
+git clone https://github.com/oracle-terraform-modules/terraform-oci-bastion.git tfbastion
+
+cd tfbastion
+
+cp terraform.tfvars.example terraform.tfvars
+----
+
+. Create a provider.tf file and add the following:
+
++
+[source,hcl]
+----
+provider "oci" {
+  tenancy_id         = var.tenancy_id
+  user_id            = var.user_id
+  fingerprint          = var.fingerprint
+  private_key_path     = var.api_private_key_path
+  region               = var.region
+}
+----
+
+. Set mandatory provider parameters:
+
+* `fingerprint`
+* `api_private_key_path`
+* `region`
+* `tenancy_id`
+* `user_id`
+
+. Set other required parameters:
+
+* `compartment_id`
+* `prefix`
+* `ig_route_id`
+* `vcn_id`
+* 1 of `ssh_public_key` or `ssh_public_key_path`
+
+
+. Optional parameters to override:
+
+* `bastion_shape`
+* `bastion_upgrade`
+* `enable_notification`
+* `notification_endpoint`
+
+. Run Terraform:
+
++
+[source,bash]
+----
+terraform init
+terraform plan
+terraform apply
+----
+
+=== Related documentation:
+
+* {uri-terraform-options}[All Terraform configuration options] for {uri-repo}[this project]

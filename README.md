@@ -1,290 +1,149 @@
-# Terraform for Oracle Linux Cloud Native Environment
+# Terraform for Oracle Cloud Native Environment
 
-[uri-repo]: https://github.com/oracle-terraform-modules/terraform-oci-olcne
+## Introduction
 
-[uri-docs]: https://github.com/oracle-terraform-modules/terraform-oci-olcne/blob/master/docs
-
-[uri-changelog]: https://github.com/oracle-terraform-modules/terraform-oci-olcne/blob/master/CHANGELOG.adoc
-[uri-configuration]: https://github.com/oracle-terraform-modules/terraform-oci-olcne/blob/master/docs/configuration.adoc
-
-[uri-contribute]: https://github.com/oracle-terraform-modules/terraform-oci-olcne/blob/master/CONTRIBUTING.adoc
-[uri-contributors]: https://github.com/oracle-terraform-modules/terraform-oci-olcne/blob/master/CONTRIBUTORS.adoc
-
-[uri-instructions]: https://github.com/oracle-terraform-modules/terraform-oci-olcne/blob/master/docs/instructions.adoc
-[uri-license]: https://github.com/oracle-terraform-modules/terraform-oci-olcne/blob/master/LICENSE
-[uri-canonical-license]: https://oss.oracle.com/licenses/upl/
-[uri-kubernetes]: https://kubernetes.io/
-[uri-networks-subnets-cidr]: https://erikberg.com/notes/networks.html
-[uri-oci]: https://cloud.oracle.com/cloud-infrastructure
-[uri-oci-bmshapes]:https://docs.cloud.oracle.com/en-us/iaas/Content/Compute/References/computeshapes.htm#bmshapes
-[uri-oci-documentation]: https://docs.cloud.oracle.com/iaas/Content/home.htm
-[uri-oci-key]: https://docs.cloud.oracle.com/en-us/iaas/Content/KeyManagement/Tasks/managingkeys.htm
-[uri-oci-vault]: https://docs.cloud.oracle.com/en-us/iaas/Content/KeyManagement/Tasks/managingvaults.htm
-[uri-oke]: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
-[uri-olcne]: https://docs.oracle.com/en/operating-systems/olcne/
-[uri-oracle]: https://www.oracle.com
-[uri-prereqs]: https://github.com/oracle-terraform-modules/terraform-oci-olcne/blob/master/docs/prerequisites.adoc
-[uri-quickstart]: https://github.com/oracle-terraform-modules/terraform-oci-olcne/blob/master/docs/quickstart.adoc
-[uri-terraform]: https://www.terraform.io
-[uri-terraform-cidrsubnet-deconstructed]: http://blog.itsjustcode.net/blog/2017/11/18/terraform-cidrsubnet-deconstructed/
-[uri-terraform-oci]: https://www.terraform.io/docs/providers/oci/index.html
-[uri-terraform-oci-base]: https://github.com/oracle-terraform-modules/terraform-oci-base
-[uri-terraform-oke]: https://github.com/oracle-terraform-modules/terraform-oci-oke
-[uri-terraform-options]: https://github.com/oracle-terraform-modules/terraform-oci-olcne/blob/master/docs/terraformoptions.adoc
-[uri-terraform-hashircorp-examples]: https://github.com/hashicorp/terraform-guides/tree/master/infrastructure-as-code/terraform-0.12-examples
-
-The [Terraform OCI OLCNE module][uri-repo] for [Oracle Cloud Infrastructure][uri-oci] provides a reusable and extensible Terraform module that provisions an [Oracle Linux Cloud Native Environment][uri-olcne] on OCI. It is developed as a tool for developers as a technical preview and simplifies the setup needed to quickly deploy using Oracle Cloud Infrastructure.
-
-This Technical Preview is not intended for production use, and has the following limitations:
-
-- OLCNE is currently supported on Bare Metal shapes only. You can use this module to install on Virtual Machine shapes, but you should be aware that while that may work, it is not a supported configuration.
-
-- Multi-master clusters are not supported.
-
-- The OLCNE nodes must opt out of OS Management Service to prevent RPM conflicts.
-
-If you are deploying a production Kubernetes cluster on OCI, you should consider using Oracle Cloud Infrastructure [Container Engine for Kubernetes (OKE)][uri-oke]. You can use [terraform-oci-oke][uri-terraform-oke] to provision an OKE cluster.
-
-## What this module will create
+This repository is the top level for a modularized method for deploying OCNE and its subcomponents into OCI using terraform.  Each submodule focuses on a specific portion of an OCNE deploymnent, allowing users to select specific configurations to deploy.
 
 This module will create the following resources:
 
-![Infrastructure](docs/images/infrastructure.png)
+![OCNE Infrastructure diagram:](/docs/images/ocne_infrastructure.png)
+* **OCNE API Server**: The OCNE API Server to orchestrate OCNE agents running on Control Plane and Worker nodes to perform installation of Kubernetes and other OCNE modules.
+* **Control Plane Nodes**: The compute instances for the Control Plane Nodes of Kubernetes cluster.
+* **Worker Nodes**: The compute instances for the Worker Nodes of Kubernetes cluster.
+* **Kubernetes API Load Balancer**: The Load Balancer to distribute Kubernetes API requrests to the Control Plane Nodes.
 
-1. Base module:
+### High-Level Deployment Options
 
-    * A VCN with internet, service and NAT gateways, and route tables.
-    * A security list, subnet and a bastion host (using Oracle Autonomous Linux).
-    * A security list, subnet for the operator host
-    * An optional notification topic and subscription.
+This module supports several common deployment scenarios out of the box.  They are listed here to avoid having to duplicated them in each of the relevant module descriptions below
 
-2. Network module:
+ * OCNE API Server on a dedicated compute instance
+ * Passing in a default network to build the deployment in
+ * Allowing these modules to create and configure a new network
+ * Use openssl to generate and distribute certificates to each node
 
-    * Network security groups for operator, master and worker nodes as well as a public load balancer.
-    * Separate subnets for operator, master, worker and load balancer.
+## Getting Started
 
-3. OLCNE module:
+### Install Terraform
+Start by installing Terraform and configuring your path.
 
-    * Performs installation of OLCNE on the master and worker nodes.
-    * An ingress controller of type `NodePort`.
-    * An optional Kata container runtime class.
+#### Download Terraform
 
-4. Master:
+1. Open your browser and navigate to the [Terraform download page](https://www.terraform.io/downloads.html). You need version 1.0.0+.
+2. Download the appropriate version for your operating system
+3. Extract the contents of compressed file and copy the terraform binary to a location that is in your path (see next section below)
 
-    * Single master node. Multi-master is not supported yet.
-    * Instance pools to manage the master nodes.
+#### Configure path on Linux/macOS
+Open a terminal and type the following:
 
-5. Worker:
+```
+$ sudo mv /path/to/terraform /usr/local/bin
+```
 
-    * A configurable number of worker nodes.
-    * Instance pools to manage to worker nodes.
+#### Configure path on Windows
+Follow the steps below to configure your path on Windows:
 
-6. Load balancer:
+1. Click on 'Start', type 'Control Panel' and open it
+2. Select System > Advanced System Settings > Environment Variables
+3. Select System variables > PATH and click 'Edit'
+4. Click New and paste the location of the directory where you have extracted the terraform.exe
+5. Close all open windows by clicking OK
+6. Open a new terminal and verify terraform has been properly installed
 
-    * A public load balancer with automatic backend creation.
+#### Testing Terraform installation
+Open a terminal and test:
 
+```
+terraform -v
+```
 
-## Instructions
+#### Install jq and yq
+The OCNE provision module uses jq and yq to process yaml files
+1. Install yq (>= 4.16): https://github.com/mikefarah/yq#install
+2. Install jq (>= 1.5): https://stedolan.github.io/jq/download/
 
-To use this module to create an OLCNE environment:
+### Generate API keys
 
-### Vault
+Follow the documentation for generating keys on [OCI Documentation](https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm#two).
 
-Create a vault to store the SSH keys securely.
+### Upload your API keys
 
-#### Create a key
+Follow the documentation for uploading your keys on [OCI Documentation](https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm#two).
 
-- In the OCI Console, create a vault by navigating to Security > Vault. See [Managing Vaults][uri-oci-vault] for more details.
-- Click on the vault and click 'Create Key'. See [Managing Keys][uri-oci-key] for more details.
+Note the fingerprint.
 
-#### Creating a secret for private ssh key
+### Create an OCI compartment
 
-- Click on Secrets and click 'Create Secret'.
-- Select compartment where you want to create the secret, enter a name and description.
-- Select the encryption key you created previously.
-- Set the secret type template as `plain-text`.
-- Paste the contents of your private SSH key in secret contents.
-- After the secret is created, click on the secret name and note down the OCID of the secret as you will need it later.
+Follow the documentation for [creating a compartment](https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/managingcompartments.htm#two).
 
-### Create the base infrastructure
+### Obtain the necessary OCIDs
 
-The base infrastructure consists of the bastion and the admin server. It reuses the [terraform-oci-base][uri-terraform-oci-base] module to create a VCN, a bastion host and an operator host with `instance_principal` enabled.
+The following OCIDs are required:
 
-- Copy `terraform.tfvars.example`:
+1. Compartment OCID
+2. Tenancy OCID
+3. User OCID
 
-````
-cp terraform.tfvars.example terraform.tfvars
-````
+Follow the documentation for obtaining the tenancy and user ids on [OCI Documentation](https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm#five).
 
-- Edit `terraform.tfvars` and set the following parameters to the correct values for your environment:
+To obtain the compartment OCID:
 
-````
-api_fingerprint = ""
-api_private_key_path = ""
-compartment_id = ""
-tenancy_id = ""
-user_id = ""
-ssh_private_key_path = "/path/to/ssh_private_key"
-ssh_public_key_path = "/path/to/ssh_public_key"
-````
+1. Navigate to Identity > Compartments
+2. Click on your Compartment
+3. Locate OCID on the page and click on 'Copy'
 
-- Run Terraform and create the base module:
+### Deploy OCNE using terraform
 
-````
-terraform apply --target=module.base -auto-approve
-````
+The best place to start when using these Terraform modules is in the `terraform-oci-olcne` module (i.e. here).  This module deploys a complete OCNE stack including a Kubernetes cluster.
 
-- SSH to the bastion to check whether you can proceed:
+The terraform.tfvars.example file can be renamed as terraform.tfvars to set the [input variables](https://www.terraform.io/docs/language/values/variables.html#assigning-values-to-root-module-variables) for the `terraform-oci-olcne` module.  Please refer to the variable
+descriptions in variables.tf for information about how each is used.
 
-````
-ssh opc@xxx.xxx.xxx
-````
+#### Overview of terraform.tfvars.example file variables
 
-If you are not able to ssh to the bastion host, you will not be able to proceed any further.
+| Name  |Description |
+|:---------- |:-----------|
+|tenancy_id|The OCID of your tenancy. To get the value, see [Where to Get the Tenancy's OCID and User's OCID](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#five).|
+|compartment_id|The OCID of the compartment.|
+|user_id|The OCID of the user that will be used by terraform to create OCI resources. To get the value, see Where to Get the Tenancy's OCID and User's OCID.|
+|fingerprint|Fingerprint for the key pair being used. To get the value, see [How to Get the Key's Fingerprint](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#four)|
+|api_private_key_path|The path to the private key used by the OCI user to authenticate with OCI API's. For details on how to create and configure keys see [How to Generate an API Signing Key ](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#two) and [How to Upload the Public Key](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#three).|
+|region|The OCI region where resources will be created. To get the value, See [Regions and Availability Domains](https://docs.oracle.com/en-us/iaas/Content/General/Concepts/regions.htm#top).|
+|availability_domain_id|The ID of the availability domain inside the `region` to create the deployment|
+|prefix|A unique prefix to attach to the name of all OCNE resources that are created as a part of the deployment.|
+|ssh_private_key_path|The SSH private key path that goes with the SSH public key that is used when accessing compute resources that are created as part of this deployment. To generate the keys see - [Generating an SSH Key Pair for Oracle Compute Cloud Service Instances](https://www.oracle.com/webfolder/technetwork/tutorials/obe/cloud/compute-iaas/generating_ssh_key/generate_ssh_key.html).|
+|ssh_public_key_path|The SSH public key path to use when configuring access to any compute resources created as part of this deployment. To generate the keys see - [Generating an SSH Key Pair for Oracle Compute Cloud Service Instances](https://www.oracle.com/webfolder/technetwork/tutorials/obe/cloud/compute-iaas/generating_ssh_key/generate_ssh_key.html).|
+|control_plane_node_count|The number of Kubernetes control plane nodes to deploy. To view the recommended worker node count, please see [Kubernetes High Availability Requirements](https://docs.oracle.com/en/operating-systems/olcne/start/hosts.html#kube-nodes).|
+|worker_node_count|The number of Kubernetes worker nodes to deploy. To view the recommended worker node count, please see [Kubernetes High Availability Requirements](https://docs.oracle.com/en/operating-systems/olcne/start/hosts.html#kube-nodes).|
+|os_version|The version of Oracle Linux to use as the base image for all compute resources that are part of this deployemnt.|
+|environment_name|The name of the OCNE Environment that is created by this module to deploy module instances into. For more details, please see [Creating an Environment](https://docs.oracle.com/en/operating-systems/olcne/start/install.html#env-create).|
+|kubernetes_name|The name of the instance of the OCNE Kubernetes module that is installed as part of this deployment. For more details, please see [Creating a Kubernetes Module](https://docs.oracle.com/en/operating-systems/olcne/start/install.html#mod-kube).|
+|ocne_version|The version and release of OCNE to deploy. For more details on the versions, please see the [OCNE Release Notes](https://docs.oracle.com/en/operating-systems/olcne/1.7/relnotes/components.html#components). To install the latest patch version of <major.minor>, please set the value to `<major.minor>` or set the value to `<major.minor.patch>` to install a specific patch version.|
+|config_file_path|The path to the OCNE configuration file. For more details on the configuration file, please see the [OCNE configuration file](https://docs.oracle.com/en/operating-systems/olcne/1.7/olcnectl/config.html)|
 
-### Complete the rest of the OLCNE infrastructure
+#### Using Object Storage for State Files
 
-- Update your `terraform.tfvars` and enter the values for the `secret_id` and certificate information to create private CA certificates.
+Using Object Storage statefile requires that you create an AWS S3 Compatible API Key on OCI. This can be done from both the OCI UI and CLI.  For more details visit [Using Object Storage for State Files](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/terraformUsingObjectStore.htm#s3).
 
-````
-secret_id = "ocid1.vaultsecret....."
-org_unit = "my org unit"
-org = "my org"
-city = "Sydney"
-state = "NSW"
-country = "au"
-common_name = "common name"
-````
+To get started, rename `state_backend.tf.example` to `state_backend.tf` and fill out the appropriate variables. Variable definitions for the S3 Backend can be found in the [Hashicorp Terraform S3 Backend Documentation](https://www.terraform.io/docs/language/settings/backends/s3.html#credentials-and-shared-configuration).
 
-- Run `terraform apply` again:
+#### Deploying Environment
 
-````
-terraform apply -auto-approve
-````
+Once all required variabes are set, source them and then initialise, validate and apply terraform. These commands must be run from within this module.
 
-When complete, Terraform will output details of how to connect to the bastion, master and operator, for example:
 
-````
-Outputs:
+- `terraform init`
 
-ssh_to_bastion = ssh -i /path/to/ssh/key opc@XXX.XXX.XXX.XXX
-ssh_to_master = ssh -i /path/to/ssh/key -J opc@XXX.XXX.XXX.XXX opc@10.0.3.2
-ssh_to_operator = ssh -i /path/to/ssh/key -J opc@XXX.XXX.XXX.XXX opc@10.0.0.146
-````
+  > The `terraform init` command is used to initialize a working directory containing Terraform configuration files. This is the first command that should be run after writing a new Terraform configuration or cloning an existing one from version control. It is safe to run this command multiple times.
 
-You can SSH to the operator and access the cluster, for example: 
+- `terraform validate`
 
-````
-[opc@cne-operator ~]$ kubectl get nodes
-NAME                STATUS   ROLES    AGE   VERSION
-cne-master          Ready    master   22m   v1.17.4+1.0.1.el7
-cne-worker          Ready    <none>   21m   v1.17.4+1.0.1.el7
-cne-worker-550781   Ready    <none>   21m   v1.17.4+1.0.1.el7
-cne-worker-585063   Ready    <none>   21m   v1.17.4+1.0.1.el7
-````
+  > The `terraform validate` command validates the configuration files in a directory, referring only to the configuration.
 
-### Controlling the cluster size
+- `terraform apply`
 
-#### Master nodes
-
-Only one master node is created in this release. 
-
-#### Worker nodes
-
-By default, three worker nodes are created. You can change this by setting _worker_size = 5_.
-
-### Using Kata Containers
-
-If you want to use Kata containers, you must:
-
-- Select one of the [Bare Metal shapes][uri-oci-bmshapes] for your worker nodes.
-- Enable the creation of kata runtime class in `terraform.tfvars`.
-
-````
-create_kata_runtime = true
-````
-
-By default, the name of the kata runtime class is 'kata'. You can configure that with the _kata_runtime_class_name_ parameter.
-
-When deploying kata containers, set the runtimeClassName accordingly:
-
-````
-apiVersion: v1
-kind: Pod
-metadata:
-  name: kata-nginx
-spec:
-  runtimeClassName: kata
-  containers:
-    - name: nginx
-      image: nginx
-      ports:
-      - containerPort: 80
-````
-
-### Testing a deployment
-
-- Print out the output to access the operator:
-
-````
-terraform output
-ssh_to_operator = ssh -i ~/.ssh/id_rsa -J opc@XXX.XXX.XXX.XXX opc@10.0.0.146
-````
-- Copy the ssh_to_operator command and run:
-
-````
-ssh -i ~/.ssh/id_rsa -J opc@XXX.XXX.XXX.XXX 
-````
-
-- Deploy an application
-
-````
-git clone https://github.com/hyder/okesamples/
-cd okesamples
-kubectl apply -f  ingresscontrollers/acme/
-````
-
-- Edit the ingresses in `ingresscontrollers/nginx` and replace `www.acme.com` with a domain within your control
-
-- Create the ingresses:
-
-````
-kubectl apply -f  ingresscontrollers/nginx/
-````
-
-- Follow the steps towards the end of this article to {uri-medium-dns}[configure DNS in OCI] and use the domain you set in the ingress above.
-
-## [Documentation][uri-docs]
-
-* [Pre-requisites][uri-prereqs]
-
-* [Terraform Options][uri-terraform-options]
-
-## Related Documentation, Blog
-* [Oracle Cloud Infrastructure Documentation][uri-oci-documentation]
-* [Oracle Linux Cloud Native Environment Documentation][uri-olcne]
-* [Terraform OCI Provider Documentation][uri-terraform-oci]
-* [Erik Berg on Networks, Subnets and CIDR][uri-networks-subnets-cidr]
-* [Lisa Hagemann on Terraform cidrsubnet Deconstructed][uri-terraform-cidrsubnet-deconstructed]
-
-## Changelog
-
-View the [CHANGELOG][uri-changelog].
-
-## Acknowledgement
-
-Code derived and adapted from [Terraform OKE Sample][uri-terraform-oke-sample] and Hashicorp's [Terraform 0.12 examples][uri-terraform-hashircorp-examples]
-
-## Contributors
-
-[Folks][uri-contributors] who contributed with explanations, code, feedback, ideas, testing etc.
-
-Learn how to [contribute][uri-contribute].
-
+  > The `terraform apply` command is used to apply the changes required to reach the desired state of the configuration.
 
 ## License
 
-Copyright (c) 2019 Oracle and/or its associates. All rights reserved.
-
-Licensed under the [Universal Permissive License 1.0][uri-license] as shown at 
-[https://oss.oracle.com/licenses/upl][uri-canonical-license].
+Copyright (c) 2019-2023 Oracle Corporation and/or affiliates.  All rights reserved.
+Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
