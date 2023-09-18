@@ -44,6 +44,12 @@ variable "attach_secondary_vnic" {
   default     = false
 }
 
+variable "attach_extra_disk" {
+  type        = bool
+  description = "If set to true, allocate a secondary disk"
+  default     = false
+}
+
 // Compute instance specific variables
 variable "ssh_public_key_path" {
   type        = string
