@@ -10,9 +10,12 @@ resource "oci_load_balancer_load_balancer" "kube_apiserver_lb" {
   count          = var.instance_count
 
   # Optional
-  shape_details {
-    minimum_bandwidth_in_mbps = lookup(var.shape, "flex_min")
-    maximum_bandwidth_in_mbps = lookup(var.shape, "flex_max")
+  dynamic "shape_details" {
+    for_each = length(regexall("flexible", lookup(var.shape, "shape", "flexible"))) > 0 ? [1] : []
+    content {
+      minimum_bandwidth_in_mbps = lookup(var.shape, "flex_min")
+      maximum_bandwidth_in_mbps = lookup(var.shape, "flex_max")
+    }
   }
   freeform_tags = var.freeform_tags
 }
