@@ -95,6 +95,7 @@ module "infrastructure" {
   compute_user             = var.compute_user
   freeform_tags            = var.freeform_tags
   virtual_ip               = var.virtual_ip
+  extra_disk_size_in_gbs   = var.extra_disk_size_in_gbs
 }
 
 module "vault" {
