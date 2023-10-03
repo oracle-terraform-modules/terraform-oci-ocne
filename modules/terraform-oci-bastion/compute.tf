@@ -43,7 +43,7 @@ resource "oci_core_instance" "bastion" {
   }
 
   source_details {
-    boot_volume_size_in_gbs = lookup(var.bastion_shape, "boot_volume_size", 50)
+    boot_volume_size_in_gbs = lookup(var.bastion_shape, "boot_volume_size", null)
     source_type             = "image"
     source_id               = local.bastion_image_id
   }

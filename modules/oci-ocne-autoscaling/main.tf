@@ -54,7 +54,7 @@ resource "oci_core_instance_configuration" "instance_config" {
       source_details {
         source_type             = "image"
         image_id                = var.image_ocid
-        boot_volume_size_in_gbs = lookup(var.instance_shape, "boot_volume_size", 50)
+        boot_volume_size_in_gbs = lookup(var.instance_shape, "boot_volume_size", null)
       }
 
       metadata = {

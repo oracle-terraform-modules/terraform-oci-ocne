@@ -56,7 +56,7 @@ variable "instance_shape" {
   type        = map(any)
   description = "The OCI instance shape to use for all compute resources that are created as part of this deployment"
   default = {
-    shape = "VM.Standard.E4.Flex", ocpus = 2, memory = 32, boot_volume_size = 50
+    shape = "VM.Standard.E4.Flex", ocpus = 2, memory = 32
   }
 }
 
@@ -277,7 +277,7 @@ variable "bastion_shape" {
   type        = map(any)
   description = "The shape of bastion instance."
   default = {
-    shape = "VM.Standard.E3.Flex", ocpus = 1, memory = 4, boot_volume_size = 50
+    shape = "VM.Standard.E3.Flex", ocpus = 1, memory = 4
   }
 }
 
