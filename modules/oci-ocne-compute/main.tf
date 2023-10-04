@@ -95,3 +95,36 @@ resource "null_resource" "assign_vnics" {
     ]
   }
 }
+
+resource "oci_core_volume" "volume_resource" {
+  # volume size should be between 50 GB and 32768 GB
+  count               = (var.extra_disk_size_in_gbs >= 50) ? var.instance_count : 0
+  availability_domain = var.availability_domain_id
+  compartment_id      = var.compartment_id
+  display_name        = format("${var.prefix}-%03d", count.index + 1)
+  size_in_gbs         = var.extra_disk_size_in_gbs
+}
+
+resource "oci_core_volume_attachment" "volume_attachment" {
+  depends_on      = [oci_core_instance.instance, oci_core_volume.volume_resource]
+  attachment_type = "iscsi"
+  # volume size should be between 50 GB and 32768 GB
+  count           = (var.extra_disk_size_in_gbs >= 50) ? var.instance_count : 0
+  instance_id     = oci_core_instance.instance[count.index].id
+  volume_id       = oci_core_volume.volume_resource[count.index].id
+  connection {
+      agent       = false
+      timeout     = "30m"
+      host        = oci_core_instance.instance[count.index].private_ip
+      user        = "opc"
+      private_key = file(var.ssh_private_key_path)
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo iscsiadm -m node -o new -T ${self.iqn} -p ${self.ipv4}:${self.port}",
+      "sudo iscsiadm -m node -o update -T ${self.iqn} -n node.startup -v automatic",
+      "sudo iscsiadm -m node -T ${self.iqn} -p ${self.ipv4}:${self.port} -l",
+    ]
+  }
+}

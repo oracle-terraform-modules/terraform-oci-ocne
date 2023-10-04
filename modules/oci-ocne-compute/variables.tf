@@ -44,6 +44,12 @@ variable "attach_secondary_vnic" {
   default     = false
 }
 
+variable "extra_disk_size_in_gbs" {
+  type        = number
+  description = "If >= 50, will provision a secondary disk drive, but note that this number needs to be between 50 GB and 32768 GB (OCI volume size)"
+  default     = 0
+}
+
 // Compute instance specific variables
 variable "ssh_public_key_path" {
   type        = string
