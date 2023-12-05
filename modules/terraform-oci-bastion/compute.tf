@@ -35,7 +35,7 @@ resource "oci_core_instance" "bastion" {
   shape = lookup(var.bastion_shape, "shape", "VM.Standard.E2.2")
 
   dynamic "shape_config" {
-    for_each = length(regexall("Flex", lookup(var.bastion_shape, "shape", "VM.Standard.E3.Flex"))) > 0 ? [1] : []
+    for_each = length(regexall("Flex|Generic", lookup(var.bastion_shape, "shape", "VM.Standard.E3.Flex"))) > 0 ? [1] : []
     content {
       ocpus         = max(1, lookup(var.bastion_shape, "ocpus", 1))
       memory_in_gbs = (lookup(var.bastion_shape, "memory", 4) / lookup(var.bastion_shape, "ocpus", 1)) > 64 ? (lookup(var.bastion_shape, "ocpus", 1) * 4) : lookup(var.bastion_shape, "memory", 4)

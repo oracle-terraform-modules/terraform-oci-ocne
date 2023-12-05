@@ -11,7 +11,7 @@ resource "oci_core_instance" "instance" {
   shape = lookup(var.instance_shape, "shape", "VM.Standard2.2")
 
   dynamic "shape_config" {
-    for_each = length(regexall("Flex", lookup(var.instance_shape, "shape", "VM.Standard.E3.Flex"))) > 0 ? [1] : []
+    for_each = length(regexall("Flex|Generic", lookup(var.instance_shape, "shape", "VM.Standard.E3.Flex"))) > 0 ? [1] : []
     content {
       ocpus         = max(1, lookup(var.instance_shape, "ocpus", 1))
       memory_in_gbs = (lookup(var.instance_shape, "memory", 4) / lookup(var.instance_shape, "ocpus", 1)) > 64 ? (lookup(var.instance_shape, "ocpus", 1) * 16) : lookup(var.instance_shape, "memory", 4)
