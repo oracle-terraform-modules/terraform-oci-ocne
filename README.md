@@ -58,8 +58,8 @@ terraform -v
 
 #### Install jq and yq
 The OCNE provision module uses jq and yq to process yaml files
-1. Install yq (>= 4.16): https://github.com/mikefarah/yq#install
-2. Install jq (>= 1.5): https://stedolan.github.io/jq/download/
+1. Install yq (>= 4.16)
+2. Install jq (>= 1.5)
 
 ### Generate API keys
 
